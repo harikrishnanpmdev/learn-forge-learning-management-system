@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+.my-course-section {
+    background-color: #f4f6fb;
+    min-height: 100vh;
+    padding: 60px 0;
+}
+
+.hero-card {
+    background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 40px;
+    color: #ffffff;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.hero-text {
+    max-width: 620px;
+    font-size: 1.05rem;
+    opacity: 0.95;
+    line-height: 1.75;
+    margin-bottom: 20px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn-custom {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-custom-primary {
+    background: #ffffff;
+    color: #4f46e5;
+}
+
+.btn-custom-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 20px -3px rgba(0, 0, 0, 0.15);
+    color: #4338ca;
+}
+
+.btn-custom-outline {
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+}
+
+.btn-custom-outline:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #ffffff;
+    transform: translateY(-3px);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-bottom: 48px;
+}
+
+.stat-card {
+    background: #f8fafc;
+    border-radius: 22px;
+    padding: 24px;
+    border: 2px solid #e2e8f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+    border-color: #4f46e5;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.stat-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.icon-primary { background: #e0e7ff; color: #4f46e5; }
+.icon-success { background: #d1fae5; color: #10b981; }
+.icon-warning { background: #fef3c7; color: #f59e0b; }
+.icon-danger { background: #fee2e2; color: #ef4444; }
+
+.course-card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 22px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.08);
+    border-color: #4f46e5;
+}
+
+.course-icon-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+}
+
+.course-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #4f46e5;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.course-title {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.course-price-block {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.action-btn {
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.empty-card{
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 22px;
+    padding: 40px;
+    text-align: center;
+}
+
+.empty-card:hover {
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+    border-color: #4f46e5;
+}
+
+.empty-card i {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+
+.empty-card h5 { margin-bottom: 10px; }
+.empty-card p { color: #94a3b8; margin-bottom: 15px; }
+
+.btn-outline-warning:hover{
+    background: #ffc107;
+    color: #ffffff;
+}
+
+.btn-empty {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: #4f46e5;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.btn-empty:hover {
+    background: #4338ca;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+@media(max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 992px) {
+    .course-card {
+        text-align: center;
+    }
+    .course-icon-container {
+        margin: 0 auto 20px auto;
+    }
+    .course-meta {
+        justify-content: center;
+    }
+    .course-price-block {
+        margin-top: 20px;
+    }
+    .action-container {
+        justify-content: center !important;
+        margin-top: 20px;
+    }
+}
+
+@media(max-width: 768px) {
+    .hero-card {
+        padding: 40px 24px;
+    }
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .btn-custom {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<section class="my-course-section">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-content">
+                <h1 class="hero-title">My Courses</h1>
+                <p class="hero-text">
+                    Manage your published courses, Update content, Organize curriculum, 
+                    Create quizzes, and help your students achieve success
+                </p>
+                <div class="hero-actions">
+                    <a href="{% url 'accounts:create_course' %}" class="btn-custom btn-custom-primary">
+                        <i class="bi bi-plus-circle-fill me-2"></i> Create New Course
+                    </a>
+                    <a href="{% url 'accounts:instructor_dashboard' %}" class="btn-custom btn-custom-outline">
+                        <i class="bi bi-speedometer2 me-2"></i> Instructor Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Total Courses</span>
+                    <span class="stat-value">{{ courses.count }}</span>
+                </div>
+                <div class="stat-icon-wrapper icon-primary">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Total Students</span>
+                    <span class="stat-value">{{ total_students }} K</span>
+                </div>
+                <div class="stat-icon-wrapper icon-success">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Total Lessons</span>
+                    <span class="stat-value">{{ total_lessons }}</span>
+                </div>
+                <div class="stat-icon-wrapper icon-warning">
+                    <i class="bi bi-play-circle-fill"></i>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Average Rating</span>
+                    <span class="stat-value">{{ average_rating }}</span>
+                </div>
+                <div class="stat-icon-wrapper icon-danger">
+                    <i class="bi bi-star-fill"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+            <h3 class="fw-bold mb-0 text-dark">
+                Published Courses
+            </h3>
+            <span class="badge text-primary fs-6">
+                {{ courses.count }} Course{{ courses.count|pluralize }}
+            </span>
+        </div>
+
+        {% for course in courses %}
+        <div class="course-card">
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-4 mb-lg-0">
+                    <div class="d-lg-flex align-items-center gap-4">
+                        <div class="course-icon-container flex-shrink-0" 
+                             style="background: linear-gradient(135deg, {{ course.bg1|default:'#4f46e5' }}, {{ course.bg2|default:'#7c3aed' }});">
+                            <i class="{{ course.icon|default:'bi bi-book' }}"></i>
+                        </div>
+                        
+                        <div class="mt-3 mt-lg-0 flex-grow-1">
+                            <span class="course-badge">{{ course.category.name }}</span>
+                            <h4 class="course-title">{{ course.title }}</h4>
+                            <p class="text-muted mb-3 fs-6 lh-sm">
+                                {{ course.description|truncatechars:150 }}
+                            </p>
+                            <div class="course-meta">
+                                <span><i class="bi bi-people text-primary me-1"></i> {{ course.students }}k Students</span>
+                                <span><i class="bi bi-play-circle text-success me-1"></i> {{ course.lessons }} Lessons</span>
+                                <span><i class="bi bi-star-fill text-warning me-1"></i> {{ course.rating }} Rating</span>
+                                <span><i class="bi bi-calendar3 text-primary me-1"></i> {{ course.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 mb-3 mb-lg-0">
+                    <div class="course-price-block">
+                        {% if course.old_price %}
+                            <small class="text-decoration-line-through text-muted mb-1 d-block">
+                                ₹{{ course.old_price }}
+                            </small>
+                        {% endif %}
+                        <h4 class="text-dark mb-0" style="font-family:Arial, Helvetica, sans-serif;">₹{{ course.price }}</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="d-flex flex-wrap gap-2 justify-content-lg-end action-container">
+                        <a href="{% url 'accounts:edit_course' course.id %}"
+                            class="btn btn-outline-primary action-btn">
+                            <i class="bi bi-pencil-square me-1"></i>Edit
+                        </a>
+
+                        <a href="{% url 'accounts:manage_curriculum' course.id %}"
+                            class="btn btn-outline-success action-btn" style="border-color: #28a745;">
+                            <i class="bi bi-journal-bookmark me-1"></i>Curriculum
+                        </a>
+
+                        <a href="{% url 'accounts:manage_quiz' course.id %}"
+                            class="btn btn-outline-warning action-btn" style="border-color: #ffc107;">
+                            <i class="bi bi-patch-question me-1"></i>Quiz
+                        </a>
+
+                        <form method="POST" action="{% url 'accounts:delete_course' course.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger action-btn" style="border-color: #f14f57;">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% empty %}
+        <div class="empty-card">
+            <i class="bi bi-journal-x"></i>
+            <h5>No Courses Yet</h5>
+            <p>Start Building your first Professional Course Today</p>
+            <a href="{% url 'accounts:create_course' %}" class="btn-empty">Create Course</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

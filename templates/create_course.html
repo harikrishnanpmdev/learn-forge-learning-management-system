@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .create-course-section {
+        background-color: #f8fafc;
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border-radius: 28px;
+        padding: 60px;
+        color: #fff;
+        margin-bottom: 40px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(4px);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-text {
+        max-width: 650px;
+        opacity: 0.9;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-card {
+        background: #ffffff;
+        border-radius: 28px;
+        padding: 50px;
+        border: 2px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        padding-bottom: 5px;
+        border-bottom: 1px dashed #475569;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+    }
+
+    .form-text {
+        color: #64748b;
+        font-size: 0.85rem;
+        margin-top: 8px;
+    }
+
+    .form-control, .form-select {
+        background-color: #f1f5f9;
+        border-radius: 14px;
+        min-height: 50px;
+        border: 1.5px solid transparent;
+        padding: 10px 18px;
+        font-size: 1rem;
+        color: #0f172a;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:hover, .form-select:hover {
+        background-color: #e2e8f0;
+        border-color: #4f46e5;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #ffffff;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        outline: none;
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    input[type="file"].form-control {
+        padding: 13px 18px;
+        line-height: 1.5;
+    }
+
+    input[type="color"].form-control {
+        padding: 5px;
+        height: 50px;
+        cursor: pointer;
+    }
+
+    select[multiple] {
+        min-height: 180px;
+        padding: 12px;
+    }
+
+    select[multiple] option {
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 4px;
+        transition: 0.2s;
+    }
+
+    select[multiple] option:checked {
+        background-color: #4f46e5;
+        color: white;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border: none;
+        border-radius: 15px;
+        font-weight: 600;
+        padding: 14px 28px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-outline-secondary {
+        border-radius: 15px;
+        font-weight: 600;
+        padding: 14px 28px;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f8fafc;
+        color: #0f172a;
+        border-color: #4f46e5;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .hero-card {
+            padding: 40px 25px;
+            border-radius: 20px;
+        }
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        .form-card {
+            padding: 30px 20px;
+            border-radius: 20px;
+        }
+        .btn-primary, .btn-outline-secondary {
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: center;
+            justify-content: center;
+        }
+        .d-flex.gap-3 {
+            flex-direction: column-reverse;
+            gap: 0 !important;
+        }
+    }
+</style>
+
+<section class="create-course-section">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-eyebrow">
+                <i class="bi bi-mortarboard-fill"></i> LearnForge Instructor Portal
+            </div>
+            <h1 class="hero-title">Create a New Course</h1>
+            <p class="hero-text">
+                Share your expertise with thousands of learners around the world.
+                Build engaging courses, upload lessons, create quizzes, and inspire students through LearnForge.
+            </p>
+        </div>
+
+        <div class="form-card">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <h3 class="section-title">
+                    Course Information
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label" for="{{ form.category.id_for_label }}">Category</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.category.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label" for="{{ form.title.id_for_label }}">Course Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.title.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label" for="{{ form.duration.id_for_label }}">Duration</label>
+                        {{ form.duration }}
+                        {% if form.duration.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.duration.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label" for="{{ form.level.id_for_label }}">Course Level</label>
+                        {{ form.level }}
+                        {% if form.level.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.level.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label" for="{{ form.description.id_for_label }}">Short Description</label>
+                    {{ form.description }}
+                    <div class="form-text">A brief Summary that appears on the Course Listing Page.</div>
+                    {% if form.description.errors %}
+                        <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.description.errors.0 }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label" for="{{ form.course_description.id_for_label }}">Detailed Description</label>
+                    {{ form.course_description }}
+                    <div class="form-text">Explain what Students will Learn, Prerequisites, Projects, and Outcomes.</div>
+                    {% if form.course_description.errors %}
+                        <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.course_description.errors.0 }}</small>
+                    {% endif %}
+                </div>
+
+                <h3 class="section-title mt-4">
+                    Pricing & Language
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label" for="{{ form.old_price.id_for_label }}">Old Price</label>
+                        {{ form.old_price }}
+                        {% if form.old_price.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.old_price.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label" for="{{ form.price.id_for_label }}">Current Price</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.price.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label" for="{{ form.language.id_for_label }}">Language</label>
+                        {{ form.language }}
+                        {% if form.language.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.language.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <h3 class="section-title mt-4">
+                    Course Appearance
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label" for="{{ form.icon.id_for_label }}">Course Icon</label>
+                        {{ form.icon }}
+                        {% if form.icon.errors %}
+                            <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.icon.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label" for="{{ form.bg1.id_for_label }}">Primary Color</label>
+                        {{ form.bg1 }}
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label" for="{{ form.bg2.id_for_label }}">Secondary Color</label>
+                        {{ form.bg2 }}
+                    </div>
+                </div>
+
+                <h3 class="section-title mt-4">
+                    Course Tags
+                </h3>
+
+                <div class="mb-5">
+                    {{ form.tags }}
+                    <small class="text-muted d-block mt-3">
+                        Hold <strong>Ctrl</strong> (Windows) or <strong>Cmd</strong> (Mac) to Select Multiple Tags.
+                    </small>
+                    {% if form.tags.errors %}
+                        <small class="text-danger mt-1 d-block"><i class="bi bi-exclamation-circle"></i> {{ form.tags.errors.0 }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <a href="{% url 'accounts:instructor_dashboard' %}" class="btn btn-outline-secondary d-flex align-items-center">
+                        <i class="bi bi-arrow-left-circle me-2"></i> Back to Dashboard
+                    </a>
+                    
+                    <button type="submit" class="btn btn-primary d-flex align-items-center">
+                        Publish Course
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

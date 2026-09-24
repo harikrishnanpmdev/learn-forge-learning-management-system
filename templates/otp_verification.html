@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    :root{
+        --otp-primary:#6366f1;
+        --otp-secondary:#8b5cf6;
+        --otp-text:#0f172a;
+        --otp-muted:#64748b;
+        --otp-border:#e2e8f0;
+    }
+
+    body{
+        margin:0;
+        font-family:'Inter',sans-serif;
+        background:
+            radial-gradient(circle at top right, rgba(99,102,241,.18), transparent 25%),
+            radial-gradient(circle at bottom left, rgba(139,92,246,.18), transparent 25%),
+            #f8fafc;
+    }
+
+    .otp-wrapper{
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:2rem 1rem;
+    }
+
+    .otp-card{
+        position:relative;
+        width:100%;
+        max-width:460px;
+        padding:2.7rem;
+        border-radius:32px;
+        background:rgba(255,255,255,.85);
+        backdrop-filter:blur(18px);
+        overflow:hidden;
+        box-shadow:
+            0 20px 50px rgba(15,23,42,.08),
+            0 5px 18px rgba(15,23,42,.05);
+        animation:floatCard 5s ease-in-out infinite;
+    }
+
+    .otp-card::before{
+        content:'';
+        position:absolute;
+        top:-120px;
+        right:-120px;
+        width:220px;
+        height:220px;
+        border-radius:50%;
+        background:linear-gradient(135deg,var(--otp-primary),var(--otp-secondary));
+        opacity:.08;
+        display:none;
+    }
+
+    .otp-card::after{
+        content:'';
+        position:absolute;
+        bottom:-100px;
+        left:-120px;
+        width:200px;
+        height:200px;
+        border-radius:50%;
+        background:linear-gradient(135deg,var(--otp-secondary),var(--otp-primary));
+        opacity:.08;
+        display:none;
+    }
+
+    @keyframes floatCard{
+        0%,100%{
+            transform:translateY(0px);
+        }
+        50%{
+            transform:translateY(-8px);
+        }
+    }
+
+    .otp-icon{
+        width:80px;
+        height:80px;
+        margin:0 auto 1.4rem;
+        border-radius:28px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:2rem;
+        color:#fff;
+        background:linear-gradient(135deg,var(--otp-primary),var(--otp-secondary));
+    }
+
+    .otp-title{
+        font-size:2rem;
+        font-weight:700;
+        text-align:center;
+        color:var(--otp-text);
+        margin-bottom:.7rem;
+    }
+
+    .otp-subtitle{
+        text-align:center;
+        color:var(--otp-muted);
+        font-size:.96rem;
+        line-height:1.8;
+        margin-bottom:2.2rem;
+    }
+
+    .otp-input{
+        width:100%;
+        height:64px;
+        border-radius:18px;
+        border:1.5px solid var(--otp-border);
+        text-align:center;
+        font-size:1.4rem;
+        font-weight:700;
+        font-family:'JetBrains Mono', monospace;
+        color:var(--otp-text);
+        background:#fff;
+        transition:all .25s ease;
+        outline:none;
+        margin-bottom:2rem;
+        letter-spacing:10px;
+    }
+
+    .otp-input:focus{
+        border-color:var(--otp-primary);
+        box-shadow:0 0 0 5px rgba(99,102,241,.12);
+        transform:translateY(-2px);
+    }
+
+    .verify-btn{
+        width:100%;
+        height:58px;
+        border:none;
+        border-radius:18px;
+        background:linear-gradient(135deg,var(--otp-primary),var(--otp-secondary));
+        color:#fff;
+        font-size:1rem;
+        font-weight:700;
+        cursor:pointer;
+        transition:all .3s ease;
+        box-shadow:0 15px 25px rgba(99,102,241,.22);
+    }
+
+    .verify-btn:hover{
+        transform:translateY(-2px);
+        box-shadow:0 20px 35px rgba(99,102,241,.28);
+    }
+
+    .back-link{
+        margin-top:1.4rem;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:.4rem;
+        color:var(--otp-muted);
+        text-decoration:none;
+        font-size:.92rem;
+        transition:.2s ease;
+    }
+
+    .back-link:hover{
+        color:var(--otp-primary);
+    }
+
+    .alert-danger{
+        border-radius:10px;
+        font-size:.92rem;
+        font-style: italic;
+    }
+    
+    @media(max-width:576px){
+
+        .otp-card{
+            padding:2rem 1.3rem;
+            border-radius:26px;
+        }
+
+        .otp-title{
+            font-size:1.7rem;
+        }
+
+        .otp-input{
+            height:58px;
+            font-size:1.2rem;
+            letter-spacing:6px;
+        }
+    }
+</style>
+
+<div class="otp-wrapper">
+    <div class="otp-card">
+        <div class="otp-icon">
+            <i class="bi bi-shield-lock-fill"></i>
+        </div>
+
+        <h2 class="otp-title">
+            Verify OTP
+        </h2>
+
+        <p class="otp-subtitle">
+            Enter the 6-digit verification code
+        </p>
+
+        {% if error %}
+        <div class="alert alert-danger text-center mb-4">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="otp" class="otp-input" maxlength="6" autofocus>
+            <input type="submit" value="Verify & Continue" class="verify-btn">
+        </form>
+
+        <a href="{% url 'accounts:register' %}" class="back-link">
+            <i class="bi bi-arrow-left"></i>
+            Back to Sign Up
+        </a>
+    </div>
+</div>
+<script>
+    const otpInput = document.querySelector('.otp-input');
+
+    otpInput.addEventListener('input', function(e){
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>
+{% endblock %}

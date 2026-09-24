@@ -1,0 +1,1030 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .lp-layout {
+        display: flex;
+        min-height: 100vh;
+        background: #f8fafc;
+    }
+
+    .lp-main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .lp-sidebar {
+        width: 400px;
+        min-width: 320px;
+        max-width: 420px;
+        background:  #ffffff;
+        border-left: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+
+    .lp-player-wrap {
+        background: #000;
+        position: relative;
+        line-height: 0;
+    }
+
+    .lp-player-wrap video {
+        width: 100%;
+        max-height: 65vh;
+        display: block;
+        object-fit: contain;
+    }
+
+    .lp-no-video {
+        min-height: 420px;
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 40px;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .lp-no-video-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(79,70,229,.18);
+        border: 2px solid rgba(79,70,229,.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #818cf8;
+        margin-bottom: 8px;
+    }
+
+    .lp-no-video h4 {
+        font-family: 'DM Sans', 'Segoe UI', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+    }
+
+    .lp-no-video p {
+        color: rgba(255,255,255,.5);
+        font-size: .875rem;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .lp-meta-bar {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 20px 28px;
+    }
+
+    .lp-course-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #eef2ff;
+        color: #4f46e5;
+        padding: 5px 10px;
+        border-radius: 16px;
+        font-size: .72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .lp-course-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin: 0 0 0 0;
+        line-height: 1.35;
+    }
+
+
+    .lp-progress-wrap {
+        min-width: 180px;
+    }
+
+    .lp-progress-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+        font-size: .72rem;
+    }
+
+    .lp-progress-label span:first-child {
+        font-weight: 700;
+        color: #64748b;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+    }
+
+    .lp-progress-label span:last-child {
+        font-weight: 800;
+        color: #64748b;
+    }
+
+    .lp-progress-bar {
+        height: 7px;
+        background: #f1f5f9;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .lp-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4f46e5, #818cf8);
+        border-radius: 999px;
+        transition: width .6s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    .lp-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 28px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .btn-nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        border-radius: 8px;
+        font-size: .875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .22s ease;
+        border: 1.5px solid #cbd5e1;
+        background: #ffffff;
+        color: #0f172a;
+        white-space: nowrap;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+        border-color: #4f46e5;
+        color: #4f46e5;
+        background: #eef2ff;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(15,23,42,.07), 0 1px 3px rgba(15,23,42,.05);
+    }
+
+    .btn-nav:disabled {
+        opacity: .4;
+        cursor: not-allowed;
+    }
+
+    .btn-complete {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: .875rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .22s ease;
+        border: 1.5px solid #16a34a;
+        background: #16a34a;
+        color: #fff;
+        white-space: nowrap;
+    }
+
+    .btn-complete:hover {
+        background: #15803d;
+        border-color: #15803d;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .btn-complete.is-done {
+        background: #ffffff;
+        color: #16a34a;
+        padding: 10px;
+        border-color: #16a34a;
+    }
+
+    .btn-complete.is-done:hover {
+        background: #dcfce7;
+    }
+
+    .lp-tabs-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0 28px;
+        display: flex;
+        gap: 0;
+    }
+
+    .lp-tab-btn {
+        padding: 14px 20px;
+        font-size: .875rem;
+        font-weight: 600;
+        color: #64748b;
+        background: none;
+        border: none;
+        border-bottom: 2.5px solid transparent;
+        margin-bottom: -1px;
+        cursor: pointer;
+        transition: all .22s ease;
+        white-space: nowrap;
+    }
+
+    .lp-tab-btn:hover {
+        color: #0f172a;
+    }
+
+    .lp-tab-btn.active {
+        color: #4f46e5;
+        border-bottom-color: #4f46e5;
+    }
+
+
+    .lp-tab-content {
+        padding: 28px;
+        background: #f8fafc;
+        flex: 1;
+    }
+
+    .lp-tab-pane { display: none; }
+    .lp-tab-pane.active { display: block; }
+
+    .lp-section-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: .72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: #64748b;
+        margin-bottom: 10px;
+    }
+
+    .lp-section-label i { color: #4f46e5; }
+
+    .lp-lesson-title {
+        font-size: clamp(1.3rem, 2vw, 1.65rem);
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 24px;
+        line-height: 1.3;
+    }
+
+    .lp-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .lp-card-body { padding: 24px; }
+
+    .lp-card-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .lp-card-label-bar {
+        width: 3px;
+        height: 14px;
+        background: #4f46e5;
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+
+    .lp-card-label span {
+        font-size: .72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        color: #4f46e5;
+    }
+
+    .lp-card-text {
+        color: #64748b;
+        line-height: 1.8;
+        font-size: .9rem;
+        margin: 0;
+        text-align: justify;
+    }
+
+
+    .lp-instructor {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .lp-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #eef2ff;
+        color: #4f46e5;
+        font-size: 1.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 2px solid #c7d2fe;
+        box-shadow: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+    }
+
+    .lp-instructor-name {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .lp-instructor-role {
+        font-size: .82rem;
+        color: #64748b;
+    }
+
+    .lp-qa-input-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .lp-qa-input-row input {
+        flex: 1;
+        padding: 10px 16px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: .875rem;
+        color: #0f172a;
+        background: #ffffff;
+        outline: none;
+        transition: border-color .22s ease;
+    }
+
+    .lp-qa-input-row input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79,70,229,.1);
+    }
+
+    .lp-qa-input-row input::placeholder { color: #94a3b8; }
+
+    .btn-post {
+        padding: 10px 20px;
+        background: #4f46e5;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: .875rem;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all .22s ease;
+        box-shadow: 0 2px 8px rgba(79,70,229,.25);
+    }
+
+    .btn-post:hover {
+        background: #3730a3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79,70,229,.3);
+    }
+
+    .lp-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 52px 40px;
+        border: 2px dashed #cbd5e1;
+        border-radius: 16px;
+        background: #ffffff;
+        text-align: center;
+    }
+
+    .lp-empty-icon {
+        font-size: 2.4rem;
+        color: #94a3b8;
+        margin-bottom: 12px;
+        opacity: .7;
+    }
+
+    .lp-empty p {
+        color: #64748b;
+        font-size: .875rem;
+        font-weight: 500;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .sidebar-head {
+        padding: 20px 20px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #ffffff;
+        flex-shrink: 0;
+        z-index: 10;
+    }
+
+    .sidebar-back-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 9px 14px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: .82rem;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        transition: all .22s ease;
+        margin-bottom: 16px;
+        text-decoration: none;
+    }
+
+    .sidebar-back-btn:hover {
+        border-color: #4f46e5;
+        color: #4f46e5;
+        background: #eef2ff;
+    }
+
+    .sidebar-head-label {
+        font-size: .68rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        color: #94a3b8;
+        margin-bottom: 4px;
+    }
+
+    .sidebar-head-meta {
+        font-size: .8rem;
+        color: #64748b;
+    }
+
+    .sidebar-head-meta strong {
+        color:#0f172a;
+        font-weight: 700;
+    }
+
+    .sidebar-curriculum {
+        flex: 1;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .sidebar-curriculum::-webkit-scrollbar { width: 4px; }
+    .sidebar-curriculum::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-curriculum::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+
+    .curriculum-section { border-bottom: 1px solid #e2e8f0; }
+
+    .section-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: background .22s ease;
+    }
+
+    .section-toggle:hover { background: #f8fafc; }
+
+    .section-toggle.open { background: #eef2ff; }
+
+    .section-toggle-chevron {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .7rem;
+        color: #64748b;
+        flex-shrink: 0;
+        transition: transform .22s ease, background .22s ease;
+    }
+
+    .section-toggle.open .section-toggle-chevron {
+        transform: rotate(180deg);
+        background: #c7d2fe;
+        color: #4f46e5;
+    }
+
+    .section-info { flex: 1; min-width: 0; }
+
+    .section-name {
+        font-size: .84rem;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 3px;
+    }
+
+    .section-toggle.open .section-name { color:  #4f46e5; }
+
+    .section-count {
+        font-size: .72rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .section-lessons {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height .4s cubic-bezier(.4,0,.2,1);
+        background: #f8fafc;
+    }
+
+    .section-lessons.open { max-height: 2000px; }
+
+    .lesson-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px 12px 22px;
+        border-left: 3px solid transparent;
+        text-decoration: none;
+        transition: all .22s ease;
+        cursor: pointer;
+    }
+
+    .lesson-link:hover { background: #ffffff; }
+
+    .lesson-link.active {
+        background: #eef2ff;
+        border-left-color: #4f46e5;
+    }
+
+    .lesson-link.completed {
+        background: #dcfce7;
+        border-left-color: #16a34a;
+    }
+
+    .lesson-icon-wrap {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: .8rem;
+        color: #64748b;
+        transition: all .22s ease;
+        box-shadow: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+    }
+
+    .lesson-link.active .lesson-icon-wrap {
+        background: #4f46e5;
+        border-color: #4f46e5;
+        color: #fff;
+    }
+
+    .lesson-link.completed .lesson-icon-wrap {
+        background: #16a34a;
+        border-color: #16a34a;
+        color: #fff;
+    }
+
+    .lesson-info { flex: 1; min-width: 0; }
+
+    .lesson-name {
+        font-size: .82rem;
+        font-weight: 500;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4;
+    }
+
+    .lesson-link.active .lesson-name { font-weight: 700; color: #4f46e5; }
+    .lesson-link.completed .lesson-name { color: #16a34a; }
+
+    .lesson-duration {
+        font-size: .72rem;
+        color: #94a3b8;
+        font-weight: 500;
+        white-space: nowrap;
+        margin-left: 4px;
+    }
+
+    @media (max-width: 1024px) {
+        .lp-sidebar {
+            width: 360px;
+            min-width: 280px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .lp-layout { flex-direction: column; }
+        .lp-sidebar {
+            width: 100%;
+            max-width: 100%;
+            min-width: unset;
+            position: static;
+            height: auto;
+            border-left: none;
+            border-top: 1px solid #e2e8f0;
+        }
+        .sidebar-curriculum { max-height: 420px; }
+        .lp-meta-bar { padding: 16px 18px; }
+        .lp-controls { padding: 12px 18px; }
+        .lp-tabs-header { padding: 0 18px; overflow-x: auto; scrollbar-width: none; }
+        .lp-tab-content { padding: 20px 18px; }
+        .lp-progress-wrap { display: none; }
+        .lp-no-video { min-height: 260px; padding: 32px 20px; }
+    }
+</style>
+
+<div class="lp-layout">
+    <div class="lp-main">
+        <div class="lp-player-wrap">
+            {% if current_lesson.video %}
+                <video id="lp-video"
+                       controls
+                       preload="metadata"
+                       controlsList="nodownload"
+                       disablePictureInPicture>
+                    <source src="{{ current_lesson.video.url }}" type="video/mp4">
+                </video>
+            {% else %}
+                <div class="lp-no-video">
+                    <div class="lp-no-video-icon">
+                        <i class="bi bi-camera-video-off"></i>
+                    </div>
+                    <h4>Lesson Video Unavailable</h4>
+                    <p>This lesson currently has no uploaded video.<br>
+                       Please contact the instructor or check back later.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="lp-meta-bar">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;">
+                <div style="min-width:0; flex:1;">
+                    <div class="lp-course-badge">
+                        <i class="{{ course.icon }}"></i>
+                        {{ course.category.name }}
+                    </div>
+                    <h1 class="lp-course-title">{{ course.title }}</h1>
+                </div>
+
+                <div class="lp-progress-wrap">
+                    <div class="lp-progress-label">
+                        <span>Course Progress</span>
+                        <span id="progress-pct">{{ progress_percent|default:"0" }}%</span>
+                    </div>
+                    <div class="lp-progress-bar">
+                        <div class="lp-progress-fill" id="progress-fill"
+                             style="width:{{ progress_percent|default:'0' }}%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lp-controls">
+            <button class="btn-nav" id="btn-prev">
+                <i class="bi bi-chevron-left"></i>Previous
+            </button>
+
+            {% if progress_percent == 100 %}
+                {% if quiz %}
+                <a href="{% url 'accounts:quiz' course.id %}" class="btn-complete" style="text-decoration:none;">
+                    Take Assessment
+                </a>
+
+                {% else %}
+                <button class="btn-complete is-done" disabled>
+                    <i class="bi bi-check-circle-fill"></i>Course Completed
+                </button>
+                {% endif %}
+
+            {% else %}
+            <button class="btn-complete" id="btn-complete" data-lesson="{{ current_lesson.id }}">
+                <i class="bi bi-check2-circle"></i>Mark Complete
+            </button>
+            {% endif %}
+            <button class="btn-nav" id="btn-next">
+                Next<i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="lp-tabs-header">
+            <button class="lp-tab-btn active" data-tab="overview">Overview</button>
+            <button class="lp-tab-btn" data-tab="qa">Q &amp; A</button>
+            <button class="lp-tab-btn" data-tab="resources">Resources</button>
+        </div>
+
+        <div class="lp-tab-content">
+            <!-- Overview -->
+            <div class="lp-tab-pane active" id="tab-overview">
+                <div class="lp-section-label">
+                    <i class="bi bi-collection"></i>
+                    <span>{{ current_lesson.section.chapter }}</span>
+                </div>
+                <h2 class="lp-lesson-title">{{ current_lesson.title }}</h2>
+
+                <div class="lp-card">
+                    <div class="lp-card-body">
+                        <div class="lp-card-label">
+                            <div class="lp-card-label-bar"></div>
+                            <span>About This Lesson</span>
+                        </div>
+                        <p class="lp-card-text">
+                            {{ current_lesson.description|default:"No description has been added for this lesson yet." }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lp-card">
+                    <div class="lp-card-body">
+                        <div class="lp-card-label">
+                            <div class="lp-card-label-bar"></div>
+                            <span>Instructor</span>
+                        </div>
+                        <div class="lp-instructor">
+                            <div class="lp-avatar">
+                                {{ course.instructor.user.icon }}
+                            </div>
+                            <div>
+                                <div class="lp-instructor-name">
+                                    {{ course.instructor.user.get_full_name }}
+                                </div>
+                                <div class="lp-instructor-role">
+                                    {{ course.instructor.designation }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q & A -->
+            <div class="lp-tab-pane" id="tab-qa">
+                <div class="lp-qa-input-row">
+                    <input type="text" placeholder="Ask something about this lesson…" id="qa-input">
+                    <button class="btn-post" id="qa-post-btn">Post Question</button>
+                </div>
+                <div class="lp-empty" id="qa-empty">
+                    <div class="lp-empty-icon"><i class="bi bi-chat-square-dots"></i></div>
+                    <p>No questions yet — be the first to ask!</p>
+                </div>
+                <div id="qa-list"></div>
+            </div>
+
+            <!-- Resources -->
+            <div class="lp-tab-pane" id="tab-resources">
+                <div class="lp-empty">
+                    <div class="lp-empty-icon"><i class="bi bi-archive"></i></div>
+                    <p>No downloadable resources attached to this lesson.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <aside class="lp-sidebar">
+        <div class="sidebar-head">
+            <a href="{% url 'cart:my_courses' %}" class="sidebar-back-btn">
+                <i class="bi bi-arrow-left"></i>
+                Back to My Courses
+            </a>
+            <div class="sidebar-head-label">Course Content</div>
+            <div class="sidebar-head-meta">
+                <strong>{{ sections|length }}</strong> chapters &bull;
+                <strong>{{ total_lessons }}</strong> lectures
+            </div>
+        </div>
+
+        <div class="sidebar-curriculum" id="sidebar-curriculum">
+            {% for section in sections %}
+            <div class="curriculum-section">
+                <button class="section-toggle {% if current_lesson in section.lessons.all %}open{% endif %}"
+                        data-target="section-{{ forloop.counter }}">
+                    <div class="section-toggle-chevron">
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="section-info">
+                        <div class="section-name">{{ section.chapter }}</div>
+                        <div class="section-count">{{ section.lessons.count }} lecture{{ section.lessons.count|pluralize }}</div>
+                    </div>
+                </button>
+
+                <div class="section-lessons {% if current_lesson in section.lessons.all %}open{% endif %}"
+                     id="section-{{ forloop.counter }}">
+                    {% for lesson in section.lessons.all %}
+                    <a href="?lesson={{ lesson.id }}"
+                        class="lesson-link lp-lesson-link
+                        {% if lesson.id == current_lesson.id %}active{% endif %}
+                        {% if lesson.id in completed_ids %}completed{% endif %}"
+                        data-lesson-id="{{ lesson.id }}">
+
+                        <div class="lesson-icon-wrap">
+                            {% if lesson.id in completed_ids %}
+                                <i class="bi bi-check-lg"></i>
+                            {% elif lesson.id == current_lesson.id %}
+                                <i class="bi bi-play-fill"></i>
+                            {% else %}
+                                <i class="bi bi-play"></i>
+                            {% endif %}
+                        </div>
+
+                        <div class="lesson-info">
+                            <div class="lesson-name">{{ lesson.title }}</div>
+                        </div>
+
+                        <div class="lesson-duration">{{ lesson.duration }}</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="lp-empty" style="margin:20px; border-radius:16px;">
+                <div class="lp-empty-icon"><i class="bi bi-collection"></i></div>
+                <p>No curriculum content yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </aside>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    /* ── Tab Switching ─────────────────────────────── */
+    const tabBtns  = document.querySelectorAll('.lp-tab-btn');
+    const tabPanes = document.querySelectorAll('.lp-tab-pane');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.tab;
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            const pane = document.getElementById('tab-' + target);
+            if (pane) pane.classList.add('active');
+        });
+    });
+
+    /* ── Sidebar Accordion ─────────────────────────── */
+    document.querySelectorAll('.section-toggle').forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const targetId = toggle.dataset.target;
+            const panel    = document.getElementById(targetId);
+            const isOpen   = toggle.classList.contains('open');
+            toggle.classList.toggle('open', !isOpen);
+            if (panel) panel.classList.toggle('open', !isOpen);
+        });
+    });
+
+    /* ── Prev / Next Navigation ────────────────────── */
+    const lessonLinks = Array.from(document.querySelectorAll('.lp-lesson-link'));
+    const activeIdx   = lessonLinks.findIndex(l => l.classList.contains('active'));
+    const prevBtn     = document.getElementById('btn-prev');
+    const nextBtn     = document.getElementById('btn-next');
+
+    if (activeIdx <= 0) {
+        prevBtn.disabled = true;
+    } else {
+        prevBtn.addEventListener('click', () => {
+            window.location.href = lessonLinks[activeIdx - 1].getAttribute('href');
+        });
+    }
+
+    if (activeIdx === -1 || activeIdx >= lessonLinks.length - 1) {
+        nextBtn.disabled = true;
+    } else {
+        nextBtn.addEventListener('click', () => {
+            window.location.href = lessonLinks[activeIdx + 1].getAttribute('href');
+        });
+    }
+
+    /* ── Mark Complete Toggle ──────────────────────── */
+    const completeBtn = document.getElementById('btn-complete');
+    if (completeBtn) {
+        completeBtn.addEventListener('click', function () {
+            const lessonId = this.dataset.lesson;
+            fetch(
+                `/cart/complete_lesson/${lessonId}/`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                }
+            )
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (
+                    cookie.substring(
+                        0,
+                        name.length + 1
+                    ) === (name + '=')
+                ) {
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(
+                            name.length + 1
+                        )
+                    );
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    /* ── Q&A Post ──────────────────────────────────── */
+    const qaInput   = document.getElementById('qa-input');
+    const qaPostBtn = document.getElementById('qa-post-btn');
+    const qaList    = document.getElementById('qa-list');
+    const qaEmpty   = document.getElementById('qa-empty');
+
+    if (qaPostBtn && qaInput) {
+        qaPostBtn.addEventListener('click', postQuestion);
+        qaInput.addEventListener('keydown', e => { if (e.key === 'Enter') postQuestion(); });
+    }
+
+    function postQuestion() {
+        const text = qaInput.value.trim();
+        if (!text) return;
+
+        if (qaEmpty) qaEmpty.style.display = 'none';
+
+        const card = document.createElement('div');
+        card.style.cssText = `
+            background:#fff; border:1px solid #e2e8f0; border-radius:12px;
+            padding:16px 20px; margin-bottom:12px;
+            box-shadow:0 1px 3px rgba(15,23,42,.06);
+        `;
+        card.innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="width:36px;height:36px;border-radius:50%;background:#eef2ff;
+                            color:#4f46e5;display:flex;align-items:center;justify-content:center;
+                            font-weight:700;font-size:.9rem;flex-shrink:0;">Y</div>
+                <div>
+                    <div style="font-size:.82rem;font-weight:700;color:#0f172a;">You</div>
+                    <div style="font-size:.72rem;color:#94a3b8;">Just now</div>
+                </div>
+            </div>
+            <p style="margin:0;font-size:.875rem;color:#475569;line-height:1.7;">${escapeHtml(text)}</p>
+        `;
+        qaList.prepend(card);
+        qaInput.value = '';
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                  .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+
+    /* ── Auto-scroll active lesson into view ───────── */
+    const activeLessonEl = document.querySelector('.lesson-link.active');
+    if (activeLessonEl) {
+        setTimeout(() => {
+            activeLessonEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 200);
+    }
+});
+</script>
+{% endblock %}

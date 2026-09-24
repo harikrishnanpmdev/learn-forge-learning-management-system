@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .options-page {
+        min-height: 100vh;
+        background: #f4f6fb;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+        color: #fff;
+        border-radius: 28px;
+        padding: 40px;
+        margin-bottom: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .hero-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+    }
+
+    .hero-card h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: #fff;
+    }
+
+    .hero-card p {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    .quiz-info {
+        margin-top: 18px;
+        font-size: 14px;
+        opacity: .85;
+    }
+
+    .question-card,
+    .options-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 18px;
+    }
+
+    .question-text {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 18px;
+        color: #334155;
+        font-size: 16px;
+        line-height: 1.6;
+        font-weight: 600;
+    }
+
+    .option-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 12px;
+        transition: .2s ease;
+    }
+
+    .option-row:hover {
+        border-color: #6366f1;
+        transform: translateX(2px);
+    }
+
+    .option-letter {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 10px;
+        background: #e0e7ff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+    }
+
+    .option-text {
+        flex: 1;
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .correct-badge {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        border: 2px solid #e2e8f0;
+    }
+
+    .add-option-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #dbe1ea;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    }
+
+    .correct-check {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .correct-check input {
+        width: 18px;
+        height: 18px;
+    }
+
+    .error-message {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 9px 18px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: #334155;
+        border: 2px solid #e2e8f0;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+    }
+
+    .empty-options {
+        text-align: center;
+        padding: 30px;
+        border: 2px dashed #cbd5e1;
+        border-radius: 15px;
+        color: #94a3b8;
+    }
+
+    .option-edit-btn {
+        color: #2563eb;
+        border: 2px solid #60a5fa;
+        padding: 6px 12px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .option-edit-btn:hover {
+        background: #2563eb;
+        color: white;
+    }
+
+    .option-delete-btn {
+        color: #dc2626;
+        background: transparent;
+        border: 2px solid #f87171;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .option-delete-btn:hover {
+        background: #dc2626;
+        color: white;
+    }
+
+    @media(max-width: 600px) {
+        .options-page {
+            padding: 30px 15px;
+        }
+
+        .hero-card,
+        .question-card,
+        .options-card,
+        .add-option-card {
+            padding: 22px;
+        }
+
+        .option-row {
+            align-items: flex-start;
+        }
+
+        .correct-badge {
+            font-size: 10px;
+        }
+
+        .actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="options-page">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-label">
+                <i class="bi bi-ui-checks-grid"></i>
+                Option Management
+            </div>
+            <h1>Manage Options</h1>
+            <p>Add Answer Choices and Define the Correct Answer</p>
+        </div>
+
+        <div class="question-card">
+            <div class="card-title">Question</div>
+            <div class="question-text">{{ question.question }}</div>
+        </div>
+
+        <div class="options-card">
+            <div class="card-title">Existing Options</div>
+
+            {% for option in options %}
+            <div class="option-row">
+                <div class="option-letter">{{ forloop.counter }}</div>
+                <div class="option-text">{{ option.option_text }}</div>
+
+                {% if option.is_correct %}
+                    <div class="correct-badge">✓ Correct Answer</div>
+                {% endif %}
+                <a href="{% url 'accounts:edit_option' option.id %}" class="option-edit-btn">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </a>
+
+                <form method="POST" action="{% url 'accounts:delete_option' option.id %}" style="display:inline;">
+                {% csrf_token %}
+                    <button type="submit" class="option-delete-btn">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+            {% empty %}
+
+            <div class="empty-options">
+                <i class="bi bi-inbox fs-2"></i>
+                <p class="mb-0 mt-1">No Options have been Added Yet</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="add-option-card">
+            <div class="card-title">Add New Option</div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Answer Option</label>
+                    {{ form.option_text }}
+
+                    {% if form.option_text.errors %}
+                        {% for error in form.option_text.errors %}
+                            <div class="error-message">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="correct-check">
+                        {{ form.is_correct }}
+                        Mark this Option as the Correct Answer
+                    </label>
+
+                    {% if form.is_correct.errors %}
+                        {% for error in form.is_correct.errors %}
+                            <div class="error-message">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="actions">
+                    <a href="{% url 'accounts:manage_questions' quiz.id %}" class="btn btn-back">Back to Questions</a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i>Add Option
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

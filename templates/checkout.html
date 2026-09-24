@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    .checkout-section {
+        min-height: 100vh;
+        padding: 80px 0;
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .checkout-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 24px;
+        padding: 32px;
+        overflow: hidden;
+    }
+
+    .checkout-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .course-list-container {
+        max-height: 480px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .course-list-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    .course-list-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .course-list-container::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+    }
+
+    .course-item {
+        padding: 16px;
+        border: 2px solid #f1f5f9;
+        border-radius: 16px;
+        background: #fbfafa;
+        margin-bottom: 14px;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .course-item:hover {
+        transform: translateY(-2px);
+        border-color: #e2e8f0;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    .course-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .course-category-badge {
+        padding: 4px 8px;
+        border-radius: 6px;
+        border: 2px solid #f1f5f9;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .summary-card {
+        background: rgba(255, 255, 255, 0.85);
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 32px;
+        position: sticky;
+        top: 40px;
+        overflow:hidden;
+    }
+
+    .summary-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: 0.02em;
+        margin-bottom: 25px;
+        text-align:center;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        color: #334155;
+    }
+
+    .summary-item strong {
+        color: #0f172a;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        background:linear-gradient(135deg,#10b981,#059669);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align:center;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .total-box {
+        background: #f8fafc;
+        border: 2px solid #f1f5f9;
+        padding: 18px;
+        border-radius: 16px;
+        margin:20px 0;
+    }
+
+    .total-amount {
+        font-size: 2rem;
+        font-family:Arial, Helvetica, sans-serif;
+        font-weight: 800;
+        color:#111827;
+    }
+
+    .pay-btn {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        padding: 16px;
+        color: #ffffff;
+        font-size: 1rem;
+        font-weight: 700;
+        background:linear-gradient(135deg,#4f46e5,#7c3aed);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .pay-btn:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+    }
+
+    .pay-btn:active {
+        transform: translateY(1px);
+    }
+
+    .secure-box {
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 2px solid #dcfce7;
+        color: #166534;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<section class="checkout-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="checkout-card">
+                    <div class="mb-4">
+                        <h1 class="checkout-title mb-2">Checkout</h1>
+                        <p class="text-muted m-0">Review selected items prior to transaction processing.</p>
+                    </div>
+
+                    <div class="course-list-container">
+                        {% for item in cart_items %}
+                        <div class="course-item">
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="course-icon" 
+                                     style="background: linear-gradient(135deg, {{ item.course.bg1 }}, {{ item.course.bg2 }});">
+                                    <i class="{{ item.course.icon }}"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">
+                                        {{ item.course.title }}
+                                    </h5>
+                                    <div class="course-category-badge" style="background: {{ item.course.bg1 }}20; color: {{ item.course.bg2 }};">
+                                        {{ item.course.category.name }}
+                                    </div>
+                                </div>
+                                <div class="fw-bold text-dark fs-5">
+                                    ₹{{ item.course.price }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h4 class="summary-title">Order Summary</h4>
+                    
+                    <div class="summary-item">
+                        <span>Total Items</span>
+                        <strong class="text-secondary">{{ cart_items.count }}</strong>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span>Order Reference</span>
+                        <strong class="text-secondary">#{{ order.id }}</strong>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span>Payment Status</span>
+                        <span class="status-badge">Pending</span>
+                    </div>
+
+                    <div class="total-box">
+                        <div class="text-muted small fw-semibold" style="text-transform: uppercase; letter-spacing: 0.05em;">
+                            Total Due
+                        </div>
+                        <div class="total-amount">
+                            ₹ {{ amount }}
+                        </div>
+                    </div>
+
+                    <button id="rzp-button" class="pay-btn">
+                        <span class="spinner" id="btn-spinner"></span>
+                        <i class="bi bi-shield-lock-fill" id="btn-icon"></i>
+                        <span id="btn-text">Proceed to Payment</span>
+                    </button>
+
+                    <div class="secure-box">
+                        <i class="bi bi-patch-check-fill text-success"></i>
+                        <span>100% Secure Checkout via Razorpay</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    const paymentSuccessUrl = "{% url 'cart:payment_success' %}";
+
+    const absoluteAmount = Math.round(
+        parseFloat("{{ amount|stringformat:'.2f' }}") * 100
+    );
+
+    const options = {
+        
+        key: "{{ razorpay_key }}",
+
+        amount: absoluteAmount,
+
+        currency: "INR",
+
+        name: "LearnForge",
+
+        description: "Course Purchase",
+
+        order_id: "{{ razorpay_order_id }}",
+
+        prefill: {
+
+            name: "{{ request.user.username }}",
+
+            email: "{{ request.user.email }}"
+
+        },
+
+        notes: {
+
+            user_id: "{{ request.user.id }}",
+
+            order_db_id: "{{ order.id }}"
+
+        },
+
+        retry: {
+
+            enabled: true,
+
+            max_count: 3
+
+        },
+
+        handler: function (response) {
+
+            window.location.href =
+                paymentSuccessUrl +
+                "?payment_id=" + response.razorpay_payment_id +
+                "&order_id=" + response.razorpay_order_id +
+                "&signature=" + response.razorpay_signature;
+
+        },
+
+        theme: {
+
+            color: "#4f46e5"
+
+        },
+
+        modal: {
+
+            ondismiss: function () {
+
+                document.getElementById('rzp-button').disabled = false;
+
+                document.getElementById('btn-spinner').style.display = 'none';
+
+                document.getElementById('btn-icon').style.display = 'inline-block';
+
+                document.getElementById('btn-text').innerText =
+                    'Proceed to Payment';
+
+            }
+
+        }
+
+    };
+
+    const rzp1 = new Razorpay(options);
+
+    rzp1.on('payment.failed', function (response) {
+        console.log("PAYMENT FAILED");
+        console.log(response);
+        document.getElementById('rzp-button').disabled = false;
+        document.getElementById('btn-spinner').style.display = 'none';
+        document.getElementById('btn-icon').style.display = 'inline-block';
+        document.getElementById('btn-text').innerText =
+            'Proceed to Payment';
+
+        alert(
+            "Payment failed: " +
+            response.error.description
+        );
+    });
+
+    document.getElementById('rzp-button').onclick = function (e) {
+
+        this.disabled = true;
+
+        document.getElementById('btn-icon').style.display = 'none';
+
+        document.getElementById('btn-spinner').style.display = 'inline-block';
+
+        document.getElementById('btn-text').innerText =
+            'Opening Secure Gateway...';
+
+        rzp1.open();
+
+        e.preventDefault();
+
+    };
+</script>
+{% endblock %}

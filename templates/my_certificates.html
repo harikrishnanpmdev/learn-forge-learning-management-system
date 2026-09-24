@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .certificates-section{
+        min-height:100vh;
+        padding:80px 0;
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+    }
+
+    .hero-card{
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter:blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius:32px;
+        padding:40px;
+        margin-bottom:32px;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .hero-title{
+        font-size: clamp(2rem, 4vw, 2.25rem);
+        font-weight:750;
+        color:#0f172a;
+        margin-bottom:12px;
+    }
+
+    .hero-subtitle{
+        color:#64748b;
+        font-size: 1.1rem;
+    }
+
+    .hero-badges{
+        display:flex;
+        flex-wrap:wrap;
+        gap:12px;
+    }
+
+    .hero-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding:8px 12px;
+        border-radius:30px;
+        background:#eef2ff;
+        color:#4338ca;
+        font-size: 0.8rem;
+        font-weight:600;
+    }
+
+    .certificate-count{
+        width:60px;
+        height:60px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:linear-gradient(135deg,#4f46e5,#7c3aed);
+        color:#fff;
+        font-size: 1.4rem;
+        font-weight:700;
+    }
+
+    .certificate-card{
+        position:relative;
+        background:#ffffff;
+        border:1px solid rgba(255, 255, 255, 0.6);
+        border-radius:28px;
+        overflow:hidden;
+        transition: all .4s ease;
+        height:100%;
+        box-shadow:0 10px 30px rgba(0,0,0,.04);
+    }
+
+    .certificate-card:hover{
+        transform: translateY(-12px);
+        box-shadow:
+            0 35px 70px rgba(80,70,229,.16),
+            0 10px 25px rgba(0,0,0,.06);
+    }
+
+    .certificate-top{
+        position:relative;
+        padding:30px;
+        color:#fff;
+    }
+
+    .course-icon{
+        position:relative;
+        z-index:2;
+        width:70px;
+        height:70px;
+        border-radius:22px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:rgba(255,255,255,.15);
+        backdrop-filter:blur(10px);
+        font-size:2rem;
+        margin-bottom:20px;
+    }
+
+    .course-title{
+        position:relative;
+        z-index:2;
+        font-size:1.3rem;
+        font-weight:800;
+        margin-bottom:6px;
+    }
+
+    .course-category{
+        position:relative;
+        z-index:2;
+        color:rgba(255,255,255,.9);
+        font-size:.9rem;
+    }
+
+    .card-body-custom{
+        padding:30px;
+    }
+
+    .info-row{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        margin-bottom:15px;
+    }
+
+    .info-icon{
+        width:40px;
+        height:40px;
+        border-radius:12px;
+        background:#eef2ff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#4f46e5;
+        font-size:1rem;
+    }
+
+    .info-title{
+        font-size:.75rem;
+        text-transform:uppercase;
+        color:#94a3b8;
+        font-weight:700;
+        letter-spacing:.05em;
+    }
+
+    .info-value{
+        font-size:.95rem;
+        font-weight:700;
+        color:#0f172a;
+    }
+
+    .btn-view{
+        width:100%;
+        padding:14px;
+        border-radius:15px;
+        border:none;
+        background:linear-gradient(135deg,#4f46e5,#7c3aed);
+        color:#fff;
+        font-weight:700;
+        transition:.3s;
+    }
+
+    .btn-view:hover{
+        color:#fff;
+        transform:translateY(-2px);
+    }
+
+    .btn-download{
+        width:100%;
+        padding:14px;
+        border-radius:15px;
+        border:2px solid #4f46e5;
+        background:#fff;
+        color:#4f46e5;
+        font-weight:700;
+        transition:.3s;
+    }
+
+    .btn-download:hover{
+        background:#4f46e5;
+        color:#fff;
+    }
+
+    .empty-state{
+        background:rgba(255, 255, 255, 0.85);
+        border-radius:32px;
+        text-align:center;
+        padding:70px;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .empty-icon{
+        width:100px;
+        height:100px;
+        border-radius:50%;
+        background:#eef2ff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        margin:auto;
+        font-size:3rem;
+        color:#4f46e5;
+    }
+
+    .empty-title{
+        margin-top:20px;
+        font-size:2rem;
+        font-weight:800;
+        color:#0f172a;
+    }
+
+    .empty-text{
+        color:#64748b;
+        margin:15px auto 30px;
+        max-width:550px;
+    }
+
+    .browse-btn{
+        display:inline-flex;
+        align-items:center;
+        gap:10px;
+        text-decoration:none;
+        padding:15px;
+        border-radius:15px;
+        background:linear-gradient(135deg,#4f46e5,#7c3aed);
+        color:#fff;
+        font-weight:700;
+    }
+
+    .browse-btn:hover{
+        color:#fff;
+    }
+
+    @media(max-width:768px){
+        .hero-card{
+            padding:30px;
+        }
+
+        .certificate-count{
+            width:70px;
+            height:70px;
+            font-size:1.6rem;
+        }
+    }
+</style>
+
+<section class="certificates-section">
+<div class="container">
+    <div class="hero-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
+            <div>
+                <h1 class="hero-title">My Certificates</h1>
+                <p class="hero-subtitle">Celebrate your achievements and access your verified course completion certificates.</p>
+                <div class="hero-badges">
+                    <div class="hero-badge">
+                        <i class="bi bi-patch-check-fill"></i>
+                        Verified Certificates
+                    </div>
+                    <div class="hero-badge">
+                        <i class="bi bi-award-fill"></i>
+                        Lifetime Access
+                    </div>
+                    <div class="hero-badge">
+                        <i class="bi bi-download"></i>
+                        Download Anytime
+                    </div>
+                </div>
+            </div>
+            <div class="certificate-count">{{ certificates.count }}</div>
+        </div>
+    </div>
+    
+    {% if certificates %}
+    <div class="row g-4">
+    {% for certificate in certificates %}
+        <div class="col-md-6 col-lg-4">
+            <div class="certificate-card">
+                <div class="certificate-top" style="background:linear-gradient(135deg, {{ certificate.course.bg1 }}, {{ certificate.course.bg2 }});">
+                    <div class="course-icon">
+                        <i class="{{ certificate.course.icon }}"></i>
+                    </div>
+
+                    <div class="course-title">
+                        {{ certificate.course.title }}
+                    </div>
+
+                    <div class="course-category">
+                        {{ certificate.course.category.name }}
+                    </div>
+                </div>
+
+                <div class="card-body-custom">
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-title">
+                                Instructor
+                            </div>
+
+                            <div class="info-value">
+                                {{ certificate.course.instructor.user.get_full_name }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-upc-scan"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-title">
+                                Certificate ID
+                            </div>
+
+                            <div class="info-value">
+                                {{ certificate.certificate_id }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-title">
+                                Issued On
+                            </div>
+
+                            <div class="info-value">
+                                {{ certificate.issued_date|date:"d M Y" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-title">
+                                Course Level
+                            </div>
+
+                            <div class="info-value" style="text-transform: uppercase;">
+                                {{ certificate.course.level }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-title">
+                                Course Duration
+                            </div>
+
+                            <div class="info-value">
+                                {{ certificate.course.duration }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="{% url 'cart:certificate_detail' certificate.id %}" class="btn btn-view">
+                                <i class="bi bi-eye-fill me-2"></i>
+                                View
+                            </a>
+                        </div>
+
+                        <div class="col-6">
+                            <a href="{% url 'cart:download_certificate' certificate.id %}" class="btn btn-download">
+                                <i class="bi bi-download me-2"></i>
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="bi bi-award"></i>
+        </div>
+
+        <h2 class="empty-title">
+            No Certificates Yet
+        </h2>
+
+        <p class="empty-text">
+            Complete your enrolled courses to earn verified certificates.
+            Once you finish a course, your certificate will automatically
+            appear here and will be available for viewing and downloading.
+        </p>
+
+        <a href="{% url 'cart:my_courses' %}" class="browse-btn">
+            <i class="bi bi-play-circle-fill"></i>
+                Continue Learning
+        </a>
+    </div>
+    {% endif %}
+</div>
+</section>
+{% endblock %}

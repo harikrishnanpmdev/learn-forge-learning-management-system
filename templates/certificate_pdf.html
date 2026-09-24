@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Certificate</title>
+
+<style>
+    @page{
+        size:A4 landscape;
+        margin:0;
+    }
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
+
+    html,body{
+        width:297mm;
+        height:210mm;
+        overflow:hidden;
+        font-family:"Segoe UI",sans-serif;
+        background:#f5f7fb;
+    }
+
+    body{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .certificate{
+        position:relative;
+        width:277mm;
+        height:190mm;
+        background:#ffffff;
+        border:4mm solid #1e3a8a;
+        overflow:hidden;
+    }
+
+    .inner-border{
+        position:absolute;
+        inset:8mm;
+        border:1mm solid #d4af37;
+    }
+
+    .certificate-body{
+        position:relative;
+        z-index:2;
+        width:100%;
+        height:100%;
+        padding:10mm 14mm;
+        text-align:center;
+    }
+
+    .brand{
+        font-size:8mm;
+        font-weight:900;
+        color:#1e3a8a;
+        font-family:Georgia,serif;
+    }
+
+    .tagline{
+        margin-top:2mm;
+        font-size:3mm;
+        color:#6b7280;
+        letter-spacing:1.3mm;
+        text-transform:uppercase;
+    }
+
+    .title{
+        margin-top:3mm;
+        font-size:8mm;
+        font-weight:800;
+        font-family:Georgia,serif;
+        color:#0f172a;
+        letter-spacing:1mm;
+    }
+
+    .gold-line{
+        width:60mm;
+        height:0.1mm;
+        margin:4mm auto;
+        background:#d4af37;
+    }
+
+    .subtitle{
+        margin-top:3mm;
+        font-size:3mm;
+        color:#64748b;
+        letter-spacing:.6mm;
+        text-transform:uppercase;
+    }
+
+    .student-name{
+        margin:3mm 0;
+        font-size:15mm;
+        font-family:"Brush Script MT",cursive;
+        color:#1e3a8a;
+        font-weight:bold;
+    }
+
+    .course-title{
+        margin-top:4mm;
+        font-size:5mm;
+        font-weight:800;
+        color:#111827;
+    }
+
+    .meta-row{
+        margin-top:8mm;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .meta-card{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        min-width:45mm;
+    }
+
+    .meta-label{
+        font-size:3.4mm;
+        text-transform:uppercase;
+        letter-spacing:1mm;
+        color:#64748b;
+        font-weight:700;
+        margin-bottom:2mm;
+    }
+
+    .meta-value{
+        font-size:4.5mm;
+        font-weight:800;
+        color:#111827;
+    }
+
+    .certificate-seal{
+        width:35mm;
+        height:35mm;
+        border-radius:50%;
+        border:2mm solid #d97706;
+        background:radial-gradient(circle,#fde68a,#f59e0b);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        color:#92400e;
+    }
+
+    .certificate-seal-icon{
+        font-size:9mm;
+        line-height:1;
+    }
+
+    .certificate-seal-text{
+        margin-top:2mm;
+        font-size:3mm;
+        font-weight:800;
+        letter-spacing:1mm;
+    }
+
+    .signature-row{
+        margin-top:6mm;
+        display:grid;
+        grid-template-columns:1fr auto 1fr;
+        gap:15mm;
+        align-items:end;
+    }
+
+    .signature-box{
+        text-align:center;
+    }
+
+    .signature{
+        font-size:8mm;
+        font-family:"Brush Script MT",cursive;
+        color:#111827;
+    }
+
+    .signature-line{
+        width:50mm;
+        height:.5mm;
+        background:#111827;
+        margin:1.5mm auto 3mm;
+    }
+
+    .signature-title{
+        font-size:3mm;
+        font-weight:700;
+        text-transform:uppercase;
+        letter-spacing:.5mm;
+        color:#374151;
+    }
+
+    .signature-sub{
+        margin-top:1mm;
+        font-size:2.9mm;
+        letter-spacing:.5mm;
+        color:#6b7280;
+    }
+</style>
+
+</head>
+<body>
+<div class="certificate">
+    <div class="inner-border"></div>
+    <div class="certificate-body">
+        <div class="brand">LearnForge</div>
+        <div class="tagline">Empowering Minds • Building Futures</div>
+        <div class="title">CERTIFICATE OF COMPLETION</div>
+        <div class="gold-line"></div>
+        <div class="subtitle">This Certificate is Proudly Presented To</div>
+        <div class="student-name">{{ certificate.student.get_full_name }}</div>
+        <div class="gold-line"></div>
+        <div class="subtitle">For Successfully Completing The Course</div>
+        <div class="course-title">{{ certificate.course.title }}</div>
+        <div class="meta-row">
+            <div class="meta-card">
+                <div class="meta-label">Issue Date</div>
+                <div class="meta-value">{{ certificate.issued_date|date:"d M Y" }}</div>
+            </div>
+
+            <div class="certificate-seal">
+                <div class="certificate-seal-icon">🎖️</div>
+                <div class="certificate-seal-text">VERIFIED</div>
+            </div>
+
+            <div class="meta-card">
+                <div class="meta-label">Certificate ID</div>
+                <div class="meta-value">{{ certificate.certificate_id }}</div>
+            </div>
+        </div>
+
+        <div class="signature-row">
+            <div class="signature-box">
+                <div class="signature">
+                    {{ certificate.course.instructor.user.get_full_name }}
+                </div>
+                <div class="signature-line"></div>
+                <div class="signature-title">Instructor</div>
+                <div class="signature-sub">
+                    {{ certificate.course.instructor.designation }}
+                </div>
+            </div>
+            <div></div>
+            <div class="signature-box">
+                <div class="signature">Satya Nadella</div>
+                <div class="signature-line"></div>
+                <div class="signature-title">Chief Executive Officer</div>
+                <div class="signature-sub">LearnForge</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

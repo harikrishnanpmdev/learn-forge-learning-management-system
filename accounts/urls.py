@@ -1,0 +1,43 @@
+from django.urls import path
+from accounts import views
+
+app_name = 'accounts'
+
+urlpatterns = [
+    path('', views.Categories.as_view(), name='categories'),
+    path('register', views.Register.as_view(), name='register'),
+    path('otp_verification', views.OTPVerification.as_view(), name='otp_verification'),
+    path('login', views.Login.as_view(), name='login'),
+    path('admin_home', views.AdminHome.as_view(), name='admin_home'),
+    path('logout', views.Logout.as_view(), name='logout'),
+    path('courses/<int:i>', views.Courses.as_view(), name='courses'),
+    path('course_detail/<int:i>', views.CourseDetail.as_view(), name='course_detail'),
+    path('quiz/<int:i>', views.QuizView.as_view(), name='quiz'),
+    path('submit_quiz/<int:i>', views.SubmitQuizView.as_view(), name='submit_quiz'),
+    path("quiz_result/<int:i>", views.QuizResultView.as_view(), name="quiz_result"),
+    path("student_dashboard", views.StudentDashboardView.as_view(), name="student_dashboard"),
+    path("instructor_dashboard", views.InstructorDashboardView.as_view(), name="instructor_dashboard"),
+    path("create_course", views.CreateCourseView.as_view(), name="create_course"),
+    path("my_courses", views.MyCoursesView.as_view(), name="my_courses"),
+    path("edit_course/<int:i>", views.EditCourseView.as_view(), name="edit_course"),
+    path("manage_curriculum/<int:i>", views.ManageCurriculumView.as_view(), name="manage_curriculum"),
+    path("add_chapter/<int:i>", views.AddChapterView.as_view(), name="add_chapter"),
+    path("edit_chapter/<int:i>/", views.EditChapterView.as_view(), name="edit_chapter"),
+    path("delete_chapter/<int:i>/", views.DeleteChapterView.as_view(), name="delete_chapter"),
+    path("manage_lessons/<int:i>/", views.ManageLessonsView.as_view(), name="manage_lessons"),
+    path("add_lesson/<int:i>/", views.AddLessonView.as_view(), name="add_lesson"),
+    path("edit_lesson/<int:i>/", views.EditLessonView.as_view(), name="edit_lesson"),
+    path("delete_lesson/<int:i>/", views.DeleteLessonView.as_view(), name="delete_lesson"),
+    path("delete_course/<int:i>/", views.DeleteCourseView.as_view(), name="delete_course"),
+    path("manage_quiz/<int:i>/", views.ManageQuizView.as_view(), name="manage_quiz"),
+    path("create_quiz/<int:i>/", views.CreateQuizView.as_view(), name="create_quiz"),
+    path("add_question/<int:i>/", views.AddQuestionView.as_view(), name="add_question"),
+    path("manage_questions/<int:i>/", views.ManageQuestionsView.as_view(), name="manage_questions"),
+    path("manage_options/<int:i>/", views.ManageOptionsView.as_view(), name="manage_options"),
+    path("edit_option/<int:i>/", views.EditOptionView.as_view(), name="edit_option"),
+    path("delete_option/<int:i>/", views.DeleteOptionView.as_view(), name="delete_option"),
+    path("edit_question/<int:i>/", views.EditQuestionView.as_view(), name="edit_question"),
+    path("delete_question/<int:i>/", views.DeleteQuestionView.as_view(), name="delete_question"),
+    path("edit_quiz/<int:i>/", views.EditQuizView.as_view(), name="edit_quiz"),
+    path("delete_quiz/<int:i>/", views.DeleteQuizView.as_view(), name="delete_quiz"),
+]

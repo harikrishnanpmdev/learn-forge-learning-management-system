@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    .quiz-section {
+        background: #f4f6fb;
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        padding: 40px;
+        color: #fff;
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .hero-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+    }
+
+    .hero-text {
+        max-width: 750px;
+        font-size: 1.02rem;
+        opacity: 0.95;
+        line-height: 1.75;
+        margin: 0;
+    }
+
+    .form-card {
+        background: #ffffff;
+        border-radius: 28px;
+        padding: 40px;
+        border: 2px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .quiz-description {
+        margin-top: -10px;
+        color: #64748b;
+    }
+
+    .form-group label {
+        font-size: 15px;
+        font-weight: 650;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .required {
+        color: #ef4444;
+    }
+
+    input, textarea, select {
+        padding: 13px 15px;
+        border: 1px solid #d9dee8;
+        border-radius: 11px;
+        font-size: 14px;
+        color: #1f2937;
+        background: #fff;
+        outline: none;
+        transition: 0.2s ease;
+        font-family: inherit;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.10);
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 120px;
+        line-height: 1.6;
+    }
+
+    .help-text {
+        font-size: 12px;
+        color: #8a93a3;
+        margin-top: 6px;
+    }
+
+    .error-list {
+        list-style: none;
+        margin-top: 7px;
+        color: #dc2626;
+        font-size: 12px;
+    }
+
+    .field-error {
+        border-color: #ef4444 !important;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 17px;
+        border: 1px solid #e1e5ec;
+        border-radius: 12px;
+        background: #fafbfc;
+    }
+
+    .checkbox-wrapper input {
+        width: 18px;
+        height: 18px;
+        accent-color: #4f46e5;
+    }
+
+    .checkbox-content {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .checkbox-title {
+        font-size: 14px;
+        font-weight: 650;
+        color: #374151;
+    }
+
+    .checkbox-description {
+        font-size: 12px;
+        color: #8a93a3;
+    }
+
+    .info-box {
+        display: flex;
+        gap: 13px;
+        align-items: flex-start;
+        padding: 16px;
+        margin-top: 25px;
+        border-radius: 12px;
+        background: #f5f7ff;
+        border: 1px solid #e2e7ff;
+        color: #4b5563;
+    }
+
+    .info-box p {
+        font-size: 14px;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid #edf0f5;
+    }
+
+    .btn {
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-back {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-back:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+    }
+</style>
+
+<section class="quiz-section">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-content">
+                <div class="hero-eyebrow">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    LearnForge Instructor Portal
+                </div>
+                <h1 class="hero-title">Create New Quiz</h1>
+                <p class="hero-text">
+                    Create an Assessment for your Students and Evaluate
+                    their Understanding of the Course Content
+                </p>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <h3 class="section-title">Quiz Information</h3>
+                <p class="quiz-description">Configure the Basic Details and Assessment Settings</p>
+
+                {% if form.non_field_errors %}
+                <div class="error-list">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="{{ form.title.id_for_label }}">
+                            Quiz Title <span class="required">*</span>
+                        </label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                        <ul class="error-list">
+                            {% for error in form.title.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="{{ form.description.id_for_label }}">
+                            Description
+                        </label>
+                        {{ form.description }}
+                        <div class="help-text">
+                            Briefly Describe What this Assessment Covers
+                        </div>
+                        {% if form.description.errors %}
+                        <ul class="error-list">
+                            {% for error in form.description.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.time_limit.id_for_label }}">
+                            Time Limit <span class="required">*</span>
+                        </label>
+                        {{ form.time_limit }}
+                        <div class="help-text">
+                            Time Limit in Minutes
+                        </div>
+                        {% if form.time_limit.errors %}
+                        <ul class="error-list">
+                            {% for error in form.time_limit.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.pass_percentage.id_for_label }}">
+                            Passing Percentage <span class="required">*</span>
+                        </label>
+                        {{ form.pass_percentage }}
+                        <div class="help-text">
+                            Minimum Percentage required to Pass the Quiz
+                        </div>
+                        {% if form.pass_percentage.errors %}
+                        <ul class="error-list">
+                             {% for error in form.pass_percentage.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Quiz Status</label>
+                        <div class="checkbox-wrapper">
+                            {{ form.is_active }}
+                            <div class="checkbox-content">
+                                <span class="checkbox-title">Activate this Quiz</span>
+                                <span class="checkbox-description">
+                                    Students can take the Quiz when it is Active
+                                </span>
+                            </div>
+                        </div>
+                        {% if form.is_active.errors %}
+                        <ul class="error-list">
+                        {% for error in form.is_active.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>
+                        After Creating the Quiz, You can Add Questions and
+                        Answer Options from the Quiz Management Page
+                    </p>
+                </div>
+
+                <div class="actions">
+                    <a href="{% url 'accounts:manage_quiz' course.id %}" class="btn btn-back">Back to Quizzes</a>
+                    <button type="submit" class="btn btn-primary">Create Quiz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

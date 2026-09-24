@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .edit-page {
+        min-height: 100vh;
+        background: #f4f6fb;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+        color: #fff;
+        border-radius: 28px;
+        padding: 40px;
+        margin-bottom: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .hero-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+    }
+
+    .hero-card h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: #fff;
+    }
+
+    .hero-card p {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    .question-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #334155;
+    }
+
+    .form-control {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        border: 1px solid #dbe1ea;
+        border-radius: 10px;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    }
+
+    .correct-check {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .correct-check input {
+        width: 20px;
+        height: 20px;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: #334155;
+        border: 2px solid #e2e8f0;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+    }
+
+    .error {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    @media(max-width:600px) {
+        .edit-page {
+            padding: 30px 15px;
+        }
+
+        .hero-card {
+            padding: 22px;
+        }
+
+        .actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="edit-page">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-label">
+                <i class="bi bi-ui-checks-grid"></i>
+                Option Management
+            </div>
+            <h1>Edit Option</h1>
+            <p>Update the Answer Option for this Question</p>
+        </div>
+
+        <div class="question-card">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Answer Option</label>
+                    {{ form.option_text }}
+
+                    {% for error in form.option_text.errors %}
+                        <div class="error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label class="correct-check">
+                        {{ form.is_correct }} Mark as Correct Answer
+                    </label>
+
+                    {% for error in form.is_correct.errors %}
+                        <div class="error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="actions">
+                    <a href="{% url 'accounts:manage_options' question.id %}" class="btn btn-back">Back</a>
+
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

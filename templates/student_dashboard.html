@@ -1,0 +1,756 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    .dashboard-section {
+      background: #f4f6fb;
+      min-height: 100vh;
+      padding: 60px 0;
+    }
+
+    .dashboard-section h2,
+    .dashboard-section h3,
+    .dashboard-section h4,
+    .dashboard-section h5,
+    .dashboard-section h6 {
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 40px;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 32px;
+      animation: slideDown 0.6s ease both;
+    }
+
+    .hero-content { 
+      position: relative; 
+      z-index: 2; 
+    }
+
+    .hero-eyebrow {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      opacity: 0.85;
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+
+    .hero-text {
+      max-width: 620px;
+      font-size: 1.02rem;
+      opacity: 0.95;
+      line-height: 1.75;
+      margin-bottom: 0;
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .hero-btn-primary { 
+      background: #fff; 
+      color: #4f46e5; 
+    }
+
+    .hero-btn-primary:hover { 
+      background: #f8fafc;
+      color: #4338ca;
+      transform: translateY(-2px); 
+    }
+
+    .hero-btn-outline { 
+      border: 2px solid rgba(255, 255, 255, 0.4); 
+      color: #fff; 
+    }
+
+    .hero-btn-outline:hover { 
+      background: rgba(255, 255, 255, 0.14); 
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      border-radius: 22px;
+      padding: 26px;
+      transition: all 0.25s ease;
+      animation: fadeUp 0.6s ease both;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      border-color: #4f46e5;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: #fff;
+      flex-shrink: 0;
+      margin: auto;
+    }
+
+    .bg-grad-primary { background: linear-gradient(135deg, #4f46e5, #818cf8); }
+    .bg-grad-success { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    .bg-grad-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .bg-grad-danger  { background: linear-gradient(135deg, #dc2626, #f87171); }
+
+    .stat-label {
+      font-size: 0.80rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      color: #0f172a;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .course-card {
+      background: #f8fafc;
+      border-radius: 22px;
+      border: 2px solid #e2e8f0;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .course-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      border-color: #4f46e5;
+    }
+
+    .course-card-body {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 26px;
+    }
+
+    .course-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .course-content { 
+      flex: 1; 
+      min-width: 0; 
+    }
+
+    .course-category {
+      font-size: 0.72rem;
+      color: #4f46e5;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    
+    .course-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #0f172a;
+    }
+
+    .course-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 30px;
+      background: #f1f5f9;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 30px;
+      background: linear-gradient(90deg, #4f46e5, #7c3aed);
+      transition: width 1s ease;
+    }
+
+    .course-action { 
+      flex-shrink: 0; 
+    }
+
+    .btn-resume {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #4f46e5;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      border: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-resume:hover { 
+      background: #4338ca; 
+      color: #fff; 
+      transform: translateY(-2px); 
+    }
+
+    .progress-summary {
+      background: #f8fafc;
+      border-radius: 22px;
+      padding: 30px;
+      border: 2px solid #e2e8f0;
+      animation: fadeUp 0.7s ease both;
+      margin-top: 18px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .progress-summary:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      border-color: #4f46e5;
+    }
+
+    .progress-ring-wrap {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .progress-ring-wrap svg { 
+      transform: rotate(-90deg); 
+    }
+
+    .progress-ring-value {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+ 
+    .summary-item strong { 
+      color: #0f172a; 
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      font-size: 0.95rem; 
+    }
+
+    .dashboard-card {
+      background: #f8fafc;
+      border-radius: 22px;
+      border: 2px solid #e2e8f0;
+      padding: 30px;
+      animation: fadeUp 0.9s ease both;
+      transition: all 0.25s ease;
+    }
+
+    .dashboard-card:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      border-color: #4f46e5;
+    }
+
+    .certificate-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .certificate-item:last-child { 
+      border-bottom: none; 
+      padding-bottom: 0; 
+    }
+
+    .certificate-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .certificate-content { 
+      flex: 1; 
+      min-width: 0; 
+    }
+
+    .certificate-content h5 {
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .certificate-content p {
+      margin: 0;
+      color: #64748b;
+      font-size: 0.86rem;
+    }
+
+    .btn-view {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1.5px solid #4f46e5;
+      color: #4f46e5;
+      background: transparent;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-view:hover { 
+      background: #4f46e5; 
+      color: #fff; 
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
+    .action-card {
+      text-decoration: none;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.25s ease;
+      display: block;
+    }
+
+    .action-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      background: #fff;
+      border-color: #4f46e5;
+    }
+
+    .action-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.15rem;
+      margin-bottom: 15px;
+    }
+
+    .action-card h6 {
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 5px;
+      font-size: 0.92rem;
+    }
+
+    .action-card span {
+      color: #64748b;
+      font-size: 0.8rem;
+    }
+
+    .empty-card {
+      background: #f8fafc;
+      border-radius: 22px;
+      padding: 30px;
+      text-align: center;
+      border: 2px dashed #cbd5e1;
+      transition: all 0.25s ease;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .empty-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      border-color: #4f46e5;
+    }
+
+    .empty-card i {
+      font-size: 2.3rem;
+      color: #94a3b8;
+      display: block;
+    }
+
+    .empty-card h5 { margin-bottom: 10px; }
+    .empty-card p { color: #94a3b8; margin-bottom: 15px; }
+
+    .btn-empty {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: #4f46e5;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-empty:hover { 
+      background: #4338ca; 
+      color: #fff;
+      transform: translateY(-2px); 
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 992px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-section { padding: 25px 0 50px; }
+      .hero-card { padding: 30px; border-radius: 20px; }
+      .hero-title { font-size: 1.9rem; }
+      .hero-text { font-size: 0.95rem; }
+      .course-card-body { flex-direction: column; align-items: flex-start; padding: 22px; }
+      .course-action { width: 100%; }
+      .btn-resume { width: 100%; justify-content: center; }
+      .action-grid { grid-template-columns: 1fr; }
+      .dashboard-card, .progress-summary { padding: 22px; }
+    }
+
+    @media (max-width: 576px) {
+      .hero-actions { flex-direction: column; }
+      .hero-actions a { width: 100%; justify-content: center; text-align: center; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .certificate-item { flex-direction: column; align-items: flex-start; }
+      .btn-view { width: 100%; justify-content: center; }
+      .progress-ring-wrap { width: 110px; height: 110px; }
+    }
+</style>
+
+<section class="dashboard-section">
+  <div class="container">
+    <div class="hero-card">
+      <div class="hero-content">
+        <div class="hero-eyebrow">Welcome back</div>
+        <h1 class="hero-title">Hello, {{ request.user.first_name|default:"Learner" }} <i class="fa-solid fa-face-smile" style="color: gold;"></i></h1>
+        <p class="hero-text">
+          Track your Learning Journey, Continue your Courses, Complete Assessments,
+          and Earn Professional Certificates with LearnForge.
+        </p>
+        <div class="hero-actions">
+          <a href="{% url 'accounts:categories' %}" class="hero-btn hero-btn-primary">
+            <i class="bi bi-search me-2" aria-hidden="true"></i>Browse Courses
+          </a>
+          
+          <a href="{% url 'cart:my_courses' %}" class="hero-btn hero-btn-outline">
+            <i class="bi bi-play-circle me-2" aria-hidden="true"></i>Continue Learning
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Purchased Courses</div>
+            <div class="stat-value">{{ total_courses|default:"0" }}</div>
+          </div>
+        </div>
+        <div class="stat-icon bg-grad-primary"><i class="bi bi-book" aria-hidden="true"></i></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Completed</div>
+            <div class="stat-value">{{ completed_courses|default:"0" }}</div>
+          </div>
+        </div>
+        <div class="stat-icon bg-grad-success"><i class="bi bi-check-circle" aria-hidden="true"></i></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Certificates</div>
+            <div class="stat-value">{{ certificate_count|default:"0" }}</div>
+          </div>
+        </div>
+        <div class="stat-icon bg-grad-warning"><i class="bi bi-award" aria-hidden="true"></i></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Average Quiz</div>
+            <div class="stat-value">{{ average_score|default:"0" }}%</div>
+          </div>
+        </div>
+        <div class="stat-icon bg-grad-danger"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="section-heading">
+          <h3 class="section-title">Continue Learning</h3>
+        </div>
+
+        {% for enrollment in purchased_courses %}
+          <div class="course-card mb-4">
+            <div class="course-card-body">
+              <div class="course-icon" style="background: linear-gradient(135deg, {{ enrollment.course.bg1 }}, {{ enrollment.course.bg2 }});">
+                <i class="{{ enrollment.course.icon }}" aria-hidden="true"></i>
+              </div>
+
+              <div class="course-content">
+                <div class="course-category">{{ enrollment.course.category.name }}</div>
+                <h4 class="course-title">{{ enrollment.course.title }}</h4>
+                <div class="course-meta">
+                  <span><i class="bi bi-clock me-1" aria-hidden="true"></i>{{ enrollment.course.duration }}</span>
+                  <span><i class="bi bi-play-circle me-1" aria-hidden="true"></i>{{ enrollment.course.lessons }} Lessons</span>
+                  <span><i class="bi bi-person-workspace me-1" aria-hidden="true"></i>{{ enrollment.course.instructor.user.get_full_name }}</span>
+                </div>
+
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" 
+                       style="width: {{ enrollment.progress_percentage|default:'0' }}%;"
+                       aria-valuenow="{{ enrollment.progress_percentage|default:'0' }}" 
+                       aria-valuemin="0" 
+                       aria-valuemax="100">
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <small class="text-muted">{{ enrollment.progress_percentage|default:"0" }}% Completed</small>
+                </div>
+              </div>
+
+              <div class="course-action">
+                <a href="{% url 'cart:resume_course' enrollment.course.id %}" class="btn-resume">Resume</a>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="empty-card">
+            <i class="bi bi-journal-x" aria-hidden="true"></i>
+            <h5>No Courses Yet</h5>
+            <p>You haven't Enrolled in any Courses Yet</p>
+            <a href="{% url 'accounts:categories' %}" class="btn-empty">Browse Courses</a>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="col-lg-4">
+        <h3 class="section-title">Learning Progress</h3>
+        <div class="progress-summary">
+          <div class="progress-ring-wrap">
+            <svg width="130" height="130" viewBox="0 0 130 130">
+              <circle cx="65" cy="65" r="57" fill="none" stroke="#edf2f7" stroke-width="10"/>
+              <circle cx="65" cy="65" r="57" fill="none" stroke="#4f46e5" stroke-width="10"
+                      stroke-linecap="round"
+                      stroke-dasharray="{{ average_score|default:'0' }} 100"
+                      pathLength="100"/>
+            </svg>
+            <div class="progress-ring-value">{{ average_score|default:"0" }} %</div>
+          </div>
+
+          <h5 class="mt-1 text-center">Average Assessment Score</h5>
+          <p class="text-muted text-center" style="font-size: 0.88rem;">
+            Keep Learning to Improve Your Overall Performance
+          </p>
+          <hr>
+          <div class="summary-item">
+            <span>Courses Purchased</span>
+            <strong>{{ total_courses|default:"0" }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Courses Completed</span>
+            <strong>{{ completed_courses|default:"0" }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Certificates Earned</span>
+            <strong>{{ certificate_count|default:"0" }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-lg-8">
+        <h3 class="section-title">Recent Certificates</h3>
+        {% if certificates %}
+        <div class="dashboard-card mt-3">
+          {% for certificate in certificates %}
+            <div class="certificate-item">
+              <div class="certificate-icon" style="background:linear-gradient(135deg,{{ certificate.course.bg1 }},{{ certificate.course.bg2 }});">
+                <i class="{{ certificate.course.icon }}"></i>
+              </div>
+
+              <div class="certificate-content">
+                <h5>{{ certificate.course.title }}</h5>
+                <p>Issued on {{ certificate.issued_date|date:"d M Y" }}</p>
+              </div>
+
+              <div>
+                <a href="{% url 'cart:certificate_detail' certificate.id %}" class="btn-view">View</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        {% else %}
+          <div class="empty-card mt-3">
+              <i class="bi bi-award"></i>
+              <h5>No Certificates Yet</h5>
+              <p class="mb-0">Complete a Course and Pass the Assessment to Earn your first Certificate</p>
+          </div>
+        {% endif %}    
+      </div>
+
+      <div class="col-lg-4">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="dashboard-card mt-3">
+          <div class="action-grid">
+            <a href="{% url 'accounts:categories' %}" class="action-card">
+              <div class="action-icon bg-grad-primary"><i class="bi bi-search"></i></div>
+              <h6>Browse Courses</h6>
+              <span>Explore New Learning Paths</span>
+            </a>
+
+            <a href="{% url 'cart:my_courses' %}" class="action-card">
+              <div class="action-icon bg-grad-success"><i class="bi bi-play-circle"></i></div>
+              <h6>My Courses</h6>
+              <span>Continue Learning</span>
+            </a>
+
+            <a href="{% url 'cart:my_certificates' %}" class="action-card">
+              <div class="action-icon bg-grad-warning"><i class="bi bi-award"></i></div>
+              <h6>Certificates</h6>
+              <span>View Achievements</span>
+            </a>
+
+            <a href="{% url 'accounts:student_dashboard' %}" class="action-card">
+              <div class="action-icon bg-grad-danger"><i class="bi bi-person-circle"></i></div>
+              <h6>My Profile</h6>
+              <span>Manage Account</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

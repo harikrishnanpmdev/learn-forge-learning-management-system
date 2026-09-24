@@ -1,0 +1,504 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    .curriculum-section {
+        background: #f4f6fb;
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        padding: 40px;
+        color: #fff;
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .hero-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+    }
+
+    .hero-text {
+        max-width: 600px;
+        font-size: 1.02rem;
+        opacity: 0.95;
+        line-height: 1.75;
+        margin: 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+        margin-bottom: 48px;
+    }
+
+    .stat-card {
+        background: #f8fafc;
+        border-radius: 22px;
+        padding: 24px;
+        border: 2px solid #e2e8f0;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        border-color: #4f46e5;
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1;
+    }
+    
+    .stat-value-text {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: #fff;
+        border: 2px solid #e2e8f0;
+        padding: 8px 16px;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-add:hover {
+        color: #ffffff;
+    }
+
+    .chapter-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 22px;
+        padding: 22px;
+        margin-bottom: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .chapter-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.08);
+        border-color: #4f46e5;
+    }
+
+    .chapter-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 5px 10px;
+        border-radius: 10px;
+        background: #e0e7ff;
+        color: #4f46e5;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    .chapter-title {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 1.2rem;
+    }
+
+    .chapter-count-block {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .action-btn {
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        padding: 8px 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+    }
+
+    .delete-btn {
+        border: 2px solid #f8848f !important;
+        color: #ee4e5e !important;
+        background: transparent !important;
+    }
+
+    .delete-btn:hover {
+        background: #dc3545 !important;
+        color: #ffffff !important;
+        border-color: #dc3545 !important;
+    }
+
+    .lessons-btn {
+        border: 2px solid rgb(93, 169, 93) !important;
+    }
+
+    .delete-warning-icon{
+        width:75px;
+        height:75px;
+        margin:auto;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#fff1f2;
+        color:#dc3545;
+        font-size:2rem;
+    }
+
+    .chapter-delete-name{
+        background:#f8fafc;
+        border:2px solid #e2e8f0;
+        border-radius:12px;
+        padding:12px 16px;
+        text-align:center;
+        font-weight:700;
+        color:#334155;
+    }
+
+    .empty-card{
+        background: #f8fafc;
+        border: 2px dashed #cbd5e1;
+        border-radius: 22px;
+        padding: 40px;
+        text-align: center;
+    }
+
+    .empty-card:hover {
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+        border-color: #4f46e5;
+    }
+
+    .empty-card i {
+        font-size: 2rem;
+        color: #94a3b8;
+    }
+
+    .empty-card h5 { margin-bottom: 10px; }
+    .empty-card p { color: #94a3b8; margin-bottom: 15px; }
+
+    @media(max-width: 1200px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media(max-width: 992px) {
+        .chapter-card {
+            text-align: center;
+        }
+        .chapter-icon-container {
+            margin: 0 auto 20px auto;
+        }
+        .chapter-meta {
+            justify-content: center;
+        }
+        .chapter-count-block {
+            margin-top: 20px;
+        }
+        .action-container {
+            justify-content: center !important;
+            margin-top: 20px;
+        }
+    }
+
+    @media(max-width: 768px) {
+        .hero-card {
+            padding: 40px 24px;
+        }
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        .action-bar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<section class="curriculum-section">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-content">
+                <div class="hero-eyebrow">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    LearnForge Instructor Portal
+                </div>
+                <h1 class="hero-title">Manage Curriculum</h1>
+                <p class="hero-text">
+                    Organize your Course into Chapters and Prepare the Learning Structure before adding Lessons and Videos
+                </p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Course</span>
+                    <span class="stat-value-text" title="{{ course.title }}">{{ course.title }}</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Chapters</span>
+                    <span class="stat-value">{{ sections.count }}</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Lessons</span>
+                    <span class="stat-value">{{ course.lessons }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <div class="page-title">Course Chapters</div>
+            <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addChapterModal">
+                <i class="bi bi-plus-circle"></i>Add Chapter
+            </button>
+        </div>
+
+        {% for section in sections %}
+        <div class="chapter-card">
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-4 mb-lg-0">
+                    <div class="d-lg-flex align-items-center">
+                        <div class="mt-3 mt-lg-0 flex-grow-1">
+                            <span class="chapter-badge">Chapter {{ forloop.counter }}</span>
+                            <h4 class="chapter-title">{{ section.chapter }}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 mb-3 mb-lg-0">
+                    <div class="chapter-count-block">
+                        <small class="text-muted mb-1 d-block font-weight-500">Lessons</small>
+                        <h4 class="fw-bold text-primary mb-0">{{ section.lessons.count }}</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="d-flex flex-wrap gap-2 justify-content-lg-end action-container">
+                        <button type="button" class="btn btn-outline-primary action-btn edit-btn"
+                            data-bs-toggle="modal" data-bs-target="#editChapterModal"
+                            data-url="{% url 'accounts:edit_chapter' section.id %}"
+                            data-name="{{ section.chapter }}">
+                            <i class="bi bi-pencil-square me-1"></i>Edit
+                        </button>
+
+                        <a href="{% url 'accounts:manage_lessons' section.id %}" class="btn btn-outline-success action-btn lessons-btn">
+                            <i class="bi bi-play-circle me-1"></i>Lessons
+                        </a>
+
+                        <button type="button" class="btn btn-outline-danger action-btn delete-btn"
+                            data-bs-toggle="modal" data-bs-target="#deleteChapterModal"
+                            data-url="{% url 'accounts:delete_chapter' section.id %}"
+                            data-name="{{ section.chapter }}">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+                    </div>
+                </div>  
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="empty-card">
+            <i class="bi bi-journal-x"></i>
+            <h5>No Chapters Found</h5>
+            <p>Create your First Chapter to Start Building the Curriculum</p>
+            <a href="#addChapterModal" class="btn-add" data-bs-toggle="modal" data-bs-target="#addChapterModal">
+                <i class="bi bi-plus-circle"></i>Add First Chapter
+            </a>
+        </div>
+        {% endfor %}
+
+        <!-- Add Chapter Modal -->
+        <div class="modal fade" id="addChapterModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-4 p-2">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add New Chapter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form method="POST" action="{% url 'accounts:add_chapter' course.id %}">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            {{ form.chapter.label_tag }}
+                            {{ form.chapter }}
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                Save Chapter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Chapter Modal -->
+        <div class="modal fade" id="editChapterModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-4 p-2">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Chapter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form method="POST" id="editChapterForm">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <label class="form-label">Chapter Name :</label>
+                            <input type="text" name="chapter" id="editChapterInput" class="form-control" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                Update Chapter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Chapter Modal -->
+        <div class="modal fade" id="deleteChapterModal" tabindex="-1" aria-labelledby="deleteChapterModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="deleteChapterModalLabel">Delete Chapter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form method="POST" id="deleteChapterForm" action="">
+                        {% csrf_token %}
+                        <div class="modal-body pt-4">
+                            <div class="text-center mb-4">
+                                <div class="delete-warning-icon">
+                                    <i class="bi bi-trash3"></i>
+                                </div>
+                            </div>
+                            <h5 class="text-center fw-bold">Are you sure ?</h5>
+                            <p class="text-center text-muted mb-2">You are about to delete</p>
+                            <div class="chapter-delete-name" id="deleteChapterName"></div>
+                        </div>
+
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-2"></i>Delete
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.querySelectorAll(".edit-btn").forEach(function(button) {
+    button.addEventListener("click", function() {
+        const chapterName = this.dataset.name;
+        const editUrl = this.dataset.url;
+        document.getElementById("editChapterInput").value = chapterName;
+        document.getElementById("editChapterForm").action = editUrl;
+    });
+});
+
+document.querySelectorAll(".delete-btn").forEach(function(button) {
+    button.addEventListener("click", function() {
+        const chapterName = this.dataset.name;
+        const deleteUrl = this.dataset.url;
+        document.getElementById("deleteChapterName").textContent = chapterName;
+        document.getElementById("deleteChapterForm").action = deleteUrl;
+    });
+});
+</script>
+{% endblock %}

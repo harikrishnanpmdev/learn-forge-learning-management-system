@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .search-hero{
+        position:relative;
+        overflow:hidden;
+        padding:40px 0;
+        background:linear-gradient(135deg,#4338ca 0%,#6366f1 45%,#8b5cf6 100%);
+    }
+
+    .search-hero-content{
+        position:relative;
+        z-index:2;
+        text-align:center;
+    }
+
+    .search-title{
+        color:white;
+        font-size:clamp(2.5rem,4vw,4.5rem);
+        font-weight:800;
+        margin-bottom:1rem;
+    }
+
+    .search-description{
+        color:rgba(255,255,255,.82);
+        font-size:1.2rem;
+        margin-bottom:1rem;
+    }
+
+    .search-keyword{
+        color:#fbbf24;
+        font-weight:700;
+    }
+
+    .search-stats{
+        display:flex;
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+
+    .stat-card{
+        padding: 0.5rem;
+        border-radius:20px;
+        background:rgba(255,255,255,.12);
+        border:2px solid rgba(255,255,255,.15);
+        backdrop-filter:blur(15px);
+        gap:10px;
+    }
+
+    .stat-number{
+        font-size:1.25rem;
+        font-weight:700;
+        color:white;
+    }
+
+    .stat-label{
+        color:rgba(255,255,255,.75);
+        font-size:.85rem;
+    }
+
+    @media(max-width:768px){
+        .search-hero{
+            padding:80px 0;
+        }
+
+        .search-title{
+            font-size:2.4rem;
+        }
+
+        .stat-card{
+            width:100%;
+            max-width:220px;
+        }
+    }
+
+    .search-section{
+        padding:60px 0;
+        background:#f8fafc;
+        min-height:60vh;
+    }
+
+    .course-card{
+        background:var(--surface);
+        border:1px solid var(--border);
+        border-radius:28px;
+        overflow:hidden;
+        height:100%;
+        position:relative;
+        transition: all .4s ease;
+        box-shadow:0 10px 30px rgba(0,0,0,.04);
+    }
+
+    .course-card:hover{
+        transform: translateY(-12px);
+        box-shadow:
+            0 35px 70px rgba(80,70,229,.16),
+            0 10px 25px rgba(0,0,0,.06);
+    }
+
+    .course-thumb{
+        position:relative;
+        overflow:hidden;
+    }
+
+    .course-icon{
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        font-size:4.5rem;
+        color:rgba(255,255,255,.88);
+        z-index:2;
+        transition:.4s;
+    }
+
+    .course-card:hover .course-icon{
+        transform:translate(-50%,-50%) scale(1.08);
+    }
+
+    .course-level{
+        position:absolute;
+        top:18px;
+        left:18px;
+        z-index:3;
+        padding:.5rem 1rem;
+        border-radius:50px;
+        background:rgba(255,255,255,.16);
+        border:1px solid rgba(255,255,255,.18);
+        backdrop-filter: blur(10px);
+        color:white;
+        font-size:.78rem;
+        font-weight:700;
+    }
+
+    .course-body{
+        padding:1.6rem;
+    }
+
+    .course-category{
+        font-size:.75rem;
+        text-transform:uppercase;
+        letter-spacing:.08em;
+        font-weight:800;
+        margin-bottom:.8rem;
+        display:inline-block;
+    }
+
+    .course-title{
+        line-height:1.6;
+        color:var(--gray-900);
+        margin-bottom:2rem;
+    }
+
+    .instructor-box{
+        display:flex;
+        align-items:center;
+        gap:.85rem;
+        margin-bottom:1rem;
+    }
+
+    .instructor-avatar{
+        width:48px;
+        height:48px;
+        border-radius:50%;
+        display:grid;
+        place-items:center;
+        color:white;
+        font-weight:700;
+        font-size:.85rem;
+    }
+
+    .rating-box{
+        display:flex;
+        align-items:center;
+        gap:.5rem;
+        margin-bottom:1rem;
+    }
+
+    .stars{
+        color:#f59e0b;
+        letter-spacing:2px;
+        font-size:.9rem;
+    }
+
+    .course-meta{
+        display:flex;
+        flex-wrap:wrap;
+        gap:1rem;
+        padding-top:1rem;
+        margin-top:1rem;
+        border-top:1px solid var(--border);
+        color:var(--text-muted);
+        font-size:.85rem;
+    }
+
+    .price-row{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        margin-top:1.5rem;
+    }
+
+    .course-price{
+        font-family:Arial, Helvetica, sans-serif;
+        font-size:1.5rem;
+        font-weight:800;
+        color:var(--gray-900);
+    }
+
+    .old-price{
+        text-decoration:line-through;
+        color:var(--text-muted);
+        margin-left:.45rem;
+        font-size:.92rem;
+    }
+
+    .course-btn{
+        border:none;
+        color:white;
+        padding:.8rem 1.3rem;
+        border-radius:50px;
+        font-weight:700;
+        transition:.35s;
+        text-decoration:none;
+        box-shadow:0 10px 25px rgba(0,0,0,.12);
+    }
+
+    .course-btn:hover{
+        transform:translateY(-3px);
+        color:white;
+    }
+
+    .empty-state{
+        background:var(--surface);
+        border-radius:var(--radius-xl);
+        padding:5rem 2rem;
+        text-align:center;
+        border:2px solid var(--border);
+        box-shadow:0 10px 30px rgba(0,0,0,.05);
+    }
+
+    .empty-state i{
+        font-size:3rem;
+        color:#cbd5e1;
+    }
+</style>
+
+<section class="search-hero">
+    <div class="container position-relative">
+        <div class="search-hero-content">
+            
+            <h1 class="search-title">
+                Search Results
+            </h1>
+
+            {% if search_term %}
+            <p class="search-description">
+                Showing Results For
+                <span class="search-keyword">
+                    "{{ search_term }}"
+                </span>
+            </p>
+            {% endif %}
+
+            <div class="search-stats">
+                <div class="stat-card">
+                    <div class="stat-number">
+                        {{ courses.count }}
+                    </div>
+                    <div class="stat-label">
+                        Courses Found
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="search-section">
+<div class="container">
+    <div class="row g-4">
+        {% for i in courses %}
+        <div class="col-md-6 col-lg-4">
+            <div class="course-card">
+                <div class="course-thumb"
+                     style="background:linear-gradient(135deg,{{ i.bg1 }},{{ i.bg2 }});">
+                    <span class="course-level">
+                        {{ i.level }}
+                    </span>
+                    <i class="{{ i.icon }} course-icon"></i>
+                </div>
+
+                <div class="course-body">
+                    <div class="course-category"
+                         style="color:{{ i.bg1 }};">
+                        {{ i.category.name }}
+                    </div>
+
+                    <h5 class="course-title">
+                        {{ i.title }}
+                    </h5>
+
+                    <div class="instructor-box">
+                        <div class="instructor-avatar"
+                             style="background:{{ i.bg1 }};">
+                            {{ i.instructor.user.icon }}
+                        </div>
+
+                        <div>
+                            <small class="text-muted d-block">
+                                Instructor
+                            </small>
+
+                            <strong>
+                                {{ i.instructor.user.first_name }}
+                                {{ i.instructor.user.last_name }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="rating-box">
+                        <div class="stars">
+                            ★★★★★
+                        </div>
+
+                        <strong>
+                            {{ i.rating }}
+                        </strong>
+
+                        <small class="text-muted">
+                            ({{ i.rating_no }})
+                        </small>
+                    </div>
+
+                    <div class="course-meta">
+                        <span>
+                            <i class="bi bi-clock me-1"></i>
+                            {{ i.duration }}
+                        </span>
+
+                        <span>
+                            <i class="bi bi-play-circle me-1"></i>
+                            {{ i.lessons }} lessons
+                        </span>
+
+                        <span>
+                            <i class="bi bi-people me-1"></i>
+                            {{ i.students }}K
+                        </span>
+                    </div>
+
+                    <div class="price-row">
+                        <div>
+                            <span class="course-price">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>{{ i.price }}
+                            </span>
+
+                            {% if i.old_price %}
+                            <span class="old-price">
+                                ₹{{ i.old_price }}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <a href="{% url 'accounts:course_detail' i.id %}"
+                           class="course-btn"
+                           style="background:linear-gradient(135deg,
+                           {{ i.bg1 }},
+                           {{ i.bg2 }});">
+                            View Course
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="empty-state">
+                <i class="bi bi-search"></i>
+
+                <h2 class="fw-bold mb-3">
+                    No Courses Found
+                </h2>
+
+                <p class="text-muted mb-0">
+                    We couldn't find any courses matching
+                    "<strong>{{ search_term }}</strong>"
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</section>
+{% endblock %}

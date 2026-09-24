@@ -1,0 +1,822 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .course-hero{
+        position:relative;
+        overflow:hidden;
+        padding:80px 0 90px;
+        background:
+        linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+    }
+
+    .hero-content{
+        position:relative;
+        z-index:2;
+    }
+
+    .hero-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:.6rem;
+        padding:.75rem 1rem;
+        border-radius:999px;
+        background:rgba(255,255,255,.12);
+        border:2px solid rgba(255,255,255,.14);
+        backdrop-filter:blur(14px);
+        color:#fff;
+        font-size:.82rem;
+        font-weight:700;
+    }
+
+    .course-title{
+        font-size:clamp(2.5rem,5vw,4rem);
+        font-weight:700;
+        line-height:1.06;
+        color:#fff;
+    }
+
+    .course-description{
+        color:rgba(255,255,255,.82);
+        line-height:2;
+        max-width:760px;
+        font-size:1.02rem;
+        text-align: justify;
+    }
+
+    .hero-meta{
+        display:flex;
+        flex-wrap:wrap;
+        gap:1.5rem;
+        margin-top:2.5rem;
+    }
+
+    .hero-meta-card{
+        background:rgba(255,255,255,.12);
+        border:2px solid rgba(255,255,255,.14);
+        backdrop-filter:blur(14px);
+        border-radius:24px;
+        padding:1rem 1.3rem;
+        color:#fff;
+        min-width:140px;
+    }
+
+    .hero-meta-number{
+        font-size:1.4rem;
+        font-weight:800;
+    }
+
+    .hero-meta-label{
+        color:rgba(255,255,255,.7);
+        font-size:.90rem;
+    }
+
+    .course-main{
+        padding:70px 0;
+    }
+
+    .tab-card{
+        background:rgba(255,255,255,.14);
+        border: 2px solid white;
+        border-radius:30px;
+        overflow:hidden;
+        box-shadow:
+            0 15px 40px rgba(15,23,42,.05);
+        transition:.4s ease;
+    }
+
+    .tab-card:hover{
+        transform:translateY(-3px);
+        box-shadow:
+            0 25px 60px rgba(15,23,42,.08);
+    }
+
+    .card-padding{
+        padding:2.5rem;
+    }
+
+    .section-title{
+        font-size:1.45rem;
+        font-weight:800;
+        color:#0f172a;
+        margin-bottom:2rem;
+        letter-spacing: 1px;
+    }
+
+    .course-tab-nav{
+        gap:.6rem;
+        flex-wrap:nowrap;
+        margin-top: -12px;
+        margin-bottom: 12px;
+    }
+
+    .course-tab-nav::-webkit-scrollbar{
+        display:none;
+    }
+
+    .course-tab-nav .nav-link{
+        border: none;
+        background:transparent;
+        color:#64748b;
+        font-weight:700;
+        font-size:.92rem;
+        padding:.7rem .9rem;
+        border-radius:20px;
+        display:flex;
+        align-items:center;
+        gap:.5rem;
+        transition:.3s ease;
+        white-space:nowrap;
+    }
+
+    .course-tab-nav .nav-link:hover{
+        background:#d8d9db;
+        color:{{ course.bg1 }};
+    }
+
+    .course-tab-nav .nav-link.active{
+        color:#fff;
+        background:linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+    }
+
+    .learn-grid{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:1.1rem;
+    }
+
+    .learn-item{
+        display:flex;
+        gap:1.1rem;
+        align-items:flex-start;
+        padding:1rem;
+        border-radius:22px;
+        background:#eeeeee;
+        border: 2px solid white;
+    }
+
+    .learn-icon{
+        width:35px;
+        height:35px;
+        border-radius:10px;
+        background:linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+        display:grid;
+        place-items:center;
+        color:white;
+        flex-shrink:0;
+    }
+
+    .requirement-item{
+        display:flex;
+        gap:1.2rem;
+        align-items:flex-start;
+        padding:1rem 0;
+        border-bottom:2px solid #eeeeee;
+    }
+
+    .requirement-item:last-child{
+        border-bottom:none;
+    }
+
+    .requirement-icon{
+        width:40px;
+        height:40px;
+        border-radius:14px;
+        background:#eef2ff;
+        color:#4f46e5;
+        display:grid;
+        place-items:center;
+        flex-shrink:0;
+    }
+
+    .tag-pill{
+        padding:.9rem 1.2rem;
+        border-radius:999px;
+        background:#eef2ff;
+        color:#4f46e5;
+        font-size:.82rem;
+        font-weight:700;
+    }
+
+    .curriculum-accordion{
+        border:2px solid #e2e8f0 !important;
+        border-radius:24px !important;
+        overflow:hidden;
+        background:#fff;
+    }
+
+    .curriculum-accordion .accordion-button{
+        background:#f8fafc;
+        padding:1.3rem 1.5rem;
+        font-weight:700;
+        box-shadow:none !important;
+        border:none;
+    }
+
+    .curriculum-accordion .accordion-button:not(.collapsed){
+        background:#eef2ff;
+        color:#4f46e5;
+    }
+
+    .lesson-item{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:1rem;
+        padding:1rem 1.5rem;
+        border-top:1px solid #e2e8f0;
+        transition:.3s ease;
+    }
+
+    .lesson-item:hover{
+        background:#f8fafc;
+    }
+
+    .lesson-left{
+        display:flex;
+        align-items:center;
+        gap:1rem;
+    }
+
+    .lesson-icon-sm{
+        width:42px;
+        height:42px;
+        border-radius:14px;
+        background:#eef2ff;
+        color:#4f46e5;
+        display:grid;
+        place-items:center;
+        flex-shrink:0;
+    }
+
+    .instructor-box{
+        display:flex;
+        gap:1.5rem;
+        flex-wrap:wrap;
+    }
+
+    .instructor-avatar{
+        width:70px;
+        height:70px;
+        border-radius:20px;
+        display:grid;
+        place-items:center;
+        background:linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+        color:#fff;
+        font-size:2rem;
+        font-weight:800;
+    }
+
+    .review-card{
+        padding:1.5rem;
+        border-radius:24px;
+        background:#eeeeee;
+        margin-bottom:1rem;
+        border: 2px solid white;
+    }
+
+    .review-header{
+        display:flex;
+        align-items:center;
+        gap:1rem;
+        margin-bottom:1rem;
+    }
+
+    .review-avatar{
+        width:56px;
+        height:56px;
+        border-radius:18px;
+        background:linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+        display:grid;
+        place-items:center;
+        color:#fff;
+        font-weight:800;
+        border: 2px solid white;
+    }
+
+    .sticky-sidebar{
+        position:sticky;
+        top:100px;
+    }
+
+    .preview-box{
+        height:240px;
+        position:relative;
+        background:linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+        display:grid;
+        place-items:center;
+        overflow:hidden;
+    }
+
+    .preview-box::before{
+        content:"";
+        position:absolute;
+        width:180px;
+        height:180px;
+        border-radius:50%;
+        background:rgba(255,255,255,.10);
+    }
+
+    .play-btn{
+        width:90px;
+        height:90px;
+        border-radius:50%;
+        display:grid;
+        place-items:center;
+        background:rgba(255,255,255,.14);
+        border:1px solid rgba(255,255,255,.18);
+        backdrop-filter:blur(14px);
+        color:#fff;
+        font-size:2rem;
+        position:relative;
+        z-index:2;
+    }
+
+    .price{
+        font-size:3rem;
+        font-weight:900;
+        line-height:1;
+        color:#0f172a;
+    }
+
+    .old-price{
+        text-decoration:line-through;
+        color:#94a3b8;
+    }
+
+    .enroll-btn{
+        width:100%;
+        border:none;
+        padding:1rem;
+        border-radius:18px;
+        font-weight:700;
+        color:#fff;
+        background:linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+        transition:.3s ease;
+    }
+
+    .enroll-btn:hover{
+        transform:translateY(-3px);
+        color:#fff;
+    }
+
+    .cart-btn{
+        width:100%;
+        border:none;
+        padding:1rem;
+        border-radius:18px;
+        font-weight:700;
+        color:#fff;
+        background:linear-gradient(135deg,{{ course.bg1 }},{{ course.bg2 }});
+        transition:.3s ease;
+    }
+
+    .cart-btn:hover{
+        transform:translateY(-3px);
+        color:#fff;
+    }
+
+    .include-item{
+        display:flex;
+        align-items:center;
+        gap:1rem;
+        margin-bottom:1rem;
+        color:#64748b;
+    }
+
+    .include-icon{
+        width:42px;
+        height:42px;
+        border-radius:14px;
+        background:#f1f5f9;
+        color:{{ course.bg1 }};
+        display:grid;
+        place-items:center;
+    }
+
+    @media(max-width:991px){
+        .sticky-sidebar{
+            position:relative;
+            top:0;
+        }
+        .learn-grid{
+            grid-template-columns:1fr;
+        }
+        .card-padding{
+            padding:1.6rem;
+        }
+    }
+</style>
+
+<section class="course-hero">
+    <div class="container-xl hero-content">
+        <div class="row">
+            <div class="col-lg">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="hero-badge">
+                        <i class="bi bi-mortarboard-fill"></i>
+                        {{ course.level }}
+                    </span>
+
+                    <span class="hero-badge">
+                        <i class="bi bi-clock-history"></i>
+                        Updated {{ course.updated_at }}
+                    </span>
+                </div>
+
+                <h2 class="course-title mb-4">
+                    {{ course.title }}
+                </h2>
+
+                <p class="course-description">
+                    {{ course.description }}
+                </p>
+
+                <div class="hero-meta">
+                    <div class="hero-meta-card">
+                        <div class="hero-meta-number">
+                            {{ course.rating }} ★
+                        </div>
+                        <div class="hero-meta-label">
+                            Course Rating
+                        </div>
+                    </div>
+
+                    <div class="hero-meta-card">
+                        <div class="hero-meta-number">
+                            {{ course.students }} K+
+                        </div>
+                        <div class="hero-meta-label">
+                            Students
+                        </div>
+                    </div>
+
+                    <div class="hero-meta-card">
+                        <div class="hero-meta-number">
+                            {{ course.lessons }}
+                        </div>
+                        <div class="hero-meta-label">
+                            Lessons
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="course-main">
+    <div class="container-xl">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <!-- TABS -->
+                <div class="tab-card mb-4">
+                    <div class="px-4 pt-4">
+                        <ul class="nav course-tab-nav">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab"
+                                        data-bs-target="#overviewTab">
+                                    <i class="bi bi-grid-1x2-fill"></i>
+                                    Overview
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab"
+                                        data-bs-target="#curriculumTab">
+                                    <i class="bi bi-journal-bookmark-fill"></i>
+                                    Curriculum
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab"
+                                        data-bs-target="#instructorTab">
+                                    <i class="bi bi-person-video3"></i>
+                                    Instructor
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab"
+                                        data-bs-target="#reviewsTab">
+                                    <i class="bi bi-star-fill"></i>
+                                    Reviews
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- TAB CONTENT -->
+                <div class="tab-content">
+                    <!-- OVERVIEW -->
+                    <div class="tab-pane fade show active"
+                         id="overviewTab">
+
+                        <!-- LEARN -->
+                        <div class="tab-card mb-4">
+                            <div class="card-padding">
+                                <h3 class="section-title">
+                                    What You'll Learn
+                                </h3>
+
+                                <div class="learn-grid">
+                                    {% for i in course.learn_points.all %}
+                                    <div class="learn-item">
+                                        <div class="learn-icon">
+                                            <i class="fa-regular fa-circle-dot"></i>
+                                        </div>
+                                        <div>
+                                            {{ i.point }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DESCRIPTION -->
+                        <div class="tab-card mb-4">
+                            <div class="card-padding">
+                                <h3 class="section-title mb-4">
+                                    Course Description
+                                </h3>
+
+                                <p class="text-muted mb-0"
+                                   style="line-height:2; text-align: justify;">
+                                    {{ course.course_description }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- REQUIREMENTS -->
+                        <div class="tab-card mb-4">
+                            <div class="card-padding">
+                                <h3 class="section-title mb-4">
+                                    Requirements
+                                </h3>
+                                {% for i in course.requirements.all %}
+                                <div class="requirement-item">
+                                    <div class="requirement-icon">
+                                        <i class="bi bi-dot"></i>
+                                    </div>
+                                    <div>
+                                        {{ i.requirement }}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- TAGS -->
+                        <div class="tab-card">
+                            <div class="card-padding">
+                                <h3 class="section-title">
+                                    Tags
+                                </h3>
+
+                                <div class="d-flex flex-wrap gap-3">
+                                    {% for i in course.tags.all %}
+                                    <span class="tag-pill">
+                                        {{ i.name }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CURRICULUM -->
+                    <div class="tab-pane fade"
+                         id="curriculumTab">
+                        <div class="tab-card">
+                            <div class="card-padding">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                                    <div>
+                                        <h3 class="section-title mb-2">
+                                            Course Curriculum
+                                        </h3>
+
+                                        <div class="text-muted small">
+                                            {{ course.sections.count }} Chapters ·
+                                            {{ course.lessons }} Lessons ·
+                                            {{ course.duration }} Duration
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion" id="curriculumAccordion">
+                                    {% for section in course.sections.all %}
+                                    <div class="accordion-item curriculum-accordion mb-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#section{{ section.id }}">
+
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="fw-bold">
+                                                        {{ section.chapter }}
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </h2>
+
+                                        <div id="section{{ section.id }}"
+                                             class="accordion-collapse collapse"
+                                             data-bs-parent="#curriculumAccordion">
+                                            <div class="accordion-body p-0">
+                                                {% for i in section.points.all %}
+                                                <div class="lesson-item">
+                                                    <div class="lesson-left">
+                                                        <div class="lesson-icon-sm">
+                                                            <i class="bi bi-play-fill"></i>
+                                                        </div>
+
+                                                        <span>
+                                                            {{ i.topic }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INSTRUCTOR -->
+                    <div class="tab-pane fade"
+                         id="instructorTab">
+                        <div class="tab-card">
+                            <div class="card-padding">
+                                <h3 class="section-title">
+                                    Meet Your Instructor
+                                </h3>
+
+                                <div class="instructor-box">
+                                    <div class="instructor-avatar">
+                                        {{ course.instructor.user.icon }}
+                                    </div>
+
+                                    <div class="flex-grow-1">
+                                        <h4 class="fw-bold mb-2">
+                                            {{ course.instructor.user.first_name }}
+                                            {{ course.instructor.user.last_name }}
+                                        </h4>
+
+                                        <div class="fw-semibold mb-3"
+                                             style="color:{{ course.bg1 }};">
+                                            {{ course.instructor.designation }}
+                                        </div>
+
+                                        <div class="d-flex flex-wrap gap-3 mb-4 text-muted">
+                                            <span>
+                                                <i class="bi bi-star-fill me-1 text-warning"></i> {{ course.instructor.rating }} Instructor Rating
+                                            </span>
+
+                                            <span>
+                                                <i class="fa-solid fa-user-graduate me-1 text-primary"></i> {{ course.instructor.students }}K Students
+                                            </span>
+
+                                            <span>
+                                                <i class="bi bi-play-circle me-1 text-success"></i> {{ course.instructor.courses }} Courses
+                                            </span>
+                                        </div>
+
+                                        <p class="text-muted mb-0"
+                                           style="line-height:2; text-align: justify;">
+                                            {{ course.instructor.bio }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REVIEWS -->
+                    <div class="tab-pane fade" id="reviewsTab">
+                        <div class="tab-card">
+                            <div class="card-padding">
+                                <h3 class="section-title">
+                                    Student Reviews
+                                </h3>
+
+                                {% for i in course.reviews.all %}
+                                <div class="review-card">
+                                    <div class="review-header">
+                                        <div class="review-avatar">
+                                            {{ i.user.icon }}
+                                        </div>
+
+                                        <div>
+                                            <div class="fw-bold">
+                                                {{ i.user.first_name }}
+                                                {{ i.user.last_name }}
+                                            </div>
+
+                                            <div class="text-warning small">
+                                                {% for j in "12345" %}
+                                                    {% if forloop.counter <= i.rating %}
+                                                        ★
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-muted mb-0"
+                                       style="line-height:1.9; text-align: justify;">
+                                        {{ i.review }}
+                                    </p>
+                                </div>
+
+                                {% empty %}
+                                <p class="text-muted mb-0">
+                                    No reviews available yet.
+                                </p>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="col-lg-4">
+                <div class="sticky-sidebar">
+                    <!-- ENROLL -->
+                    <div class="tab-card">
+                        <div class="preview-box">
+                            <div class="play-btn">
+                                <i class="bi bi-play-fill"></i>
+                            </div>
+                        </div>
+
+                        <div class="card-padding">
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="price">
+                                    <i class="fa-solid fa-indian-rupee-sign"></i>{{ course.price }}
+                                </div>
+
+                                {% if course.old_price %}
+                                <div class="old-price">
+                                    ₹{{ course.old_price }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- <button class="enroll-btn mb-3">
+                                Enroll Now
+                            </button> -->
+
+                            {% if not user.is_authenticated or user.want_to_join_as == "student" %}
+                            <a href="{% url 'cart:addtocart' course.id %}" class="btn cart-btn">
+                                Add To Cart
+                            </a>
+                            {% endif %}
+
+                            <hr class="my-4">
+
+                            <h6 class="fw-bold mb-4">
+                                This Course Includes
+                            </h6>
+
+                            <div class="include-item">
+                                <div class="include-icon">
+                                    <i class="bi bi-camera-video"></i>
+                                </div>
+                                {{ course.duration }} on-demand Video
+                            </div>
+
+                            <div class="include-item">
+                                <div class="include-icon">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </div>
+                                Lifetime Access
+                            </div>
+
+                            <div class="include-item">
+                                <div class="include-icon">
+                                    <i class="bi bi-phone"></i>
+                                </div>
+                                Access on Mobile & Desktop
+                            </div>
+
+                            <div class="include-item">
+                                <div class="include-icon">
+                                    <i class="bi bi-award"></i>
+                                </div>
+                                Certificate of Completion
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

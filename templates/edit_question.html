@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .edit-question-page {
+        min-height: 100vh;
+        background: #f6f8fc;
+        padding: 45px 20px;
+    }
+
+    .question-container {
+        max-width: 850px;
+        margin: auto;
+    }
+
+    .question-hero {
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        padding: 40px;
+        border-radius: 28px;
+        margin-bottom: 32px;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .question-hero h1 {
+        font-size: 2.3rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: #fff;
+    }
+
+    .question-hero p {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    .question-card {
+        background: #ffffff;
+        border-radius: 28px;
+        padding: 35px;
+        border: 2px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-control {
+        width: 100%;
+        border: 1px solid #dbe1ea;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 15px;
+        box-sizing: border-box;
+        transition: 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .help-text {
+        color: #6b7280;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .error-message {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid #eef0f4;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 18px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-back {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-back:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-primary {
+        background: #4f46e5;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #4338ca;
+    }
+
+    @media(max-width: 600px) {
+        .edit-question-page {
+            padding: 30px 15px;
+        }
+
+        .edit-card {
+            padding: 22px;
+        }
+
+        .actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="edit-question-page">
+    <div class="question-container">
+        <div class="question-hero">
+            <div class="hero-eyebrow">
+                <i class="bi bi-mortarboard-fill"></i>LearnForge Instructor Portal
+            </div>
+            <h1>Edit Question</h1>
+            <p>Update the Question and its Display Order</p>
+        </div>
+
+        <div class="question-card">
+            <div class="section-title">Question Information</div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Question</label>
+                    {{ form.question }}
+                    {% for error in form.question.errors %}
+                        <div class="error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                    <div class="help-text">
+                        Update the Question that Students will Answer
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Question Order</label>
+                    {{ form.question_order }}
+                    {% for error in form.question_order.errors %}
+                        <div class="error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                    <div class="help-text">
+                        Determines the Order in which the Question Appears
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <a href="{% url 'accounts:manage_questions' quiz.id %}" class="btn btn-back">Back to Questions</a>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,416 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .cart-section {
+    min-height: 100vh;
+    padding: 80px 0;
+    background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+  }
+
+  .cart-header {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 32px;
+    padding: 40px;
+    margin-bottom: 32px;
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .cart-title {
+    font-size: clamp(2rem, 4vw, 2.25rem);
+    font-weight: 750;
+    color: #0f172a;
+  }
+
+  .cart-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .course-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .course-card:hover {
+    transform: translateY(-4px) scale(1.005);
+    box-shadow: 0 30px 60px rgba(79, 70, 229, 0.15);
+    border-color: rgba(79, 70, 229, 0.2);
+  }
+
+  .course-thumb {
+    width: 90px;
+    height: 90px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 2.2rem;
+    flex-shrink: 0;
+  }
+
+  .course-title {
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+
+  .course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .course-meta span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .course-meta i {
+    color: #4f46e5;
+    font-size: 1rem;
+  }
+
+  .badge {
+    font-weight: 750;
+    letter-spacing: 0.02em;
+  }
+
+  .price-tag {
+    font-size: 1.5rem;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color:var(--gray-900);
+  }
+
+  .remove-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: #ffcdcd;
+    color: #dc2626;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .remove-btn:hover {
+    background: #fca5a5;
+    color: #991b1b;
+    transform: rotate(8deg) scale(1.05);
+  }
+
+  .summary-card{
+    position:sticky;
+    top:100px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius:30px;
+    padding:35px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    overflow:hidden;
+  }
+
+  .summary-title{
+    font-size:1.5rem;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:25px;
+    letter-spacing:0.02em;
+    text-align:center;
+  }
+
+  .discount-banner{
+    background:linear-gradient(135deg,#10b981,#059669);
+    color:white;
+    padding:12px;
+    border-radius:15px;
+    margin-bottom:25px;
+    text-align:center;
+    font-weight:700;
+  }
+  
+  .summary-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+    color:#64748b;
+  }
+
+  .summary-item strong{
+    color:#111827;
+  }
+
+  .total-box{
+    background:#f8fafc;
+    padding:20px;
+    border-radius:20px;
+    margin:20px 0;
+  }
+
+  .total-label{
+    font-size:.95rem;
+    color:#64748b;
+  }
+
+  .total-amount{
+    font-size:2rem;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    color:#111827;
+  }
+
+  .checkout-btn {
+    width:100%;
+    border:1px solid rgba(255, 255, 255, 0.6);
+    padding:15px;
+    border-radius:18px;
+    font-weight:800;
+    color:white;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    transition:.3s;
+  }
+
+  .checkout-btn:hover{
+    transform:translateY(-3px);
+    color:white;
+  }
+
+  .secure-box {
+    margin-top:18px;
+    padding:15px;
+    border-radius:16px;
+    background:#eef2ff;
+    color:#4338ca;
+    text-align: center;
+    font-weight: 600;
+    border: 1px dashed rgba(79, 70, 229, 0.25);
+  }
+
+  .secure-box i{
+    margin-right:6px;
+  }
+
+  .empty-cart {
+    border-radius: 32px;
+    padding: 80px 40px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .empty-cart h2 {
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 12px;
+  }
+
+  @media(max-width: 991.98px) {
+    .summary-card {
+      position: relative;
+      top: 0;
+      margin-top: 16px;
+    }
+  }
+
+  @media(max-width: 768px) {
+    .cart-header {
+      padding: 30px 20px;
+    }
+    .course-thumb {
+      width: 75px;
+      height: 75px;
+      font-size: 1.8rem;
+    }
+    .course-meta {
+      gap: 10px;
+    }
+  }
+</style>
+
+<section class="cart-section">
+  <div class="container">
+    <div class="cart-header">
+      <h1 class="cart-title">
+        My Cart <span class="cart-count">{{ cart_items.count }}</span>
+      </h1>
+      <p class="text-muted mb-0">Review your selected courses and checkout securely.</p>
+    </div>
+
+    {% if cart_items %}
+    <div class="row g-4">
+      <div class="col-lg-8">
+        {% for item in cart_items %}
+        <div class="course-card mb-4">
+          <div class="p-4">
+            <div class="row align-items-center g-4">
+              <div class="col-md-8">
+                <div class="d-flex gap-4 align-items-center flex-column flex-sm-row text-center text-sm-start">
+                  <div class="course-thumb" style="background: linear-gradient(135deg, {{ item.course.bg1 }}, {{ item.course.bg2 }});">
+                    <i class="{{ item.course.icon }}"></i>
+                  </div>
+
+                  <div>
+                    <div class="d-flex flex-wrap justify-content-center justify-content-sm-start gap-2 mb-3">
+                      <span class="badge rounded-pill px-3 py-2" style="background: {{ item.course.bg1 }}20; color: {{ item.course.bg2 }};">
+                        {{ item.course.category.name }}
+                      </span>
+                      <span class="badge bg-warning text-dark px-3 py-2">
+                        ★ {{ item.course.rating }}
+                      </span>
+                      <span class="badge bg-success px-3 py-2">
+                        {{ item.course.level }}
+                      </span>
+                    </div>
+
+                    <h4 class="course-title mb-3">{{ item.course.title }}</h4>
+
+                    <div class="course-meta justify-content-center justify-content-sm-start">
+                      <span><i class="bi bi-translate"></i> {{ item.course.language }}</span>
+                      <span><i class="bi bi-play-circle-fill"></i> {{ item.course.lessons }} lessons</span>
+                      <span><i class="bi bi-clock-fill"></i> {{ item.course.duration }}</span>
+                      <span><i class="bi bi-people-fill"></i> {{ item.course.students }}k</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 text-center text-md-end">
+                {% if item.course.old_price %}
+                <div class="text-decoration-line-through text-muted small mb-1">
+                  ₹{{ item.course.old_price }}
+                </div>
+                {% endif %}
+
+                <div class="price-tag mb-3">
+                  <i class="fa-solid fa-indian-rupee-sign"></i>{{ item.course.price }}
+                </div>
+
+                <a href="{% url 'cart:removefromcart' item.id %}" class="btn remove-btn" title="Remove course">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="col-lg-4">
+        <div class="summary-card">
+          <h4 class="summary-title">
+            Order Summary
+          </h4>
+
+          <div class="discount-banner">
+            <i class="bi bi-lightning-charge-fill me-1"></i>
+            You Save ₹ {{ total_savings }} ({{ discount_percentage }}% OFF)
+          </div>
+
+          <div class="summary-item">
+            <span>Total Courses</span>
+            <strong>{{ cart_items.count }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>Total Lessons</span>
+            <strong>{{ total_lessons }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>Life Time Access</span>
+            <strong>Included</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>Certificate</span>
+            <strong>Included</strong>
+          </div>
+          <hr>
+
+          <div class="summary-item">
+            <span>Original Price</span>
+            <strong class="text-decoration-line-through text-muted">
+              ₹{{ total_old_price }}
+            </strong>
+          </div>
+
+          <div class="summary-item">
+            <span>You Save</span>
+            <strong class="text-success">
+              ₹ {{ total_savings }}
+            </strong>
+          </div>
+
+          <div class="summary-item">
+            <span>Discount</span>
+            <strong class="text-success">
+              {{ discount_percentage }}% OFF
+            </strong>
+          </div>
+
+          <div class="total-box">
+            <div class="total-label">
+              Total Amount
+            </div>
+            <div class="total-amount">
+              <i class="fa-solid fa-indian-rupee-sign"></i>{{ total_price }}
+            </div>
+          </div>
+
+          <a href="{% url 'cart:checkout' %}"
+            class="btn checkout-btn">
+            Proceed To Checkout
+          </a>
+
+          <div class="secure-box">
+            <i class="bi bi-shield-lock-fill"></i>
+            Secure Razorpay Checkout
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <div class="empty-cart">
+      <div class="mb-2">
+        <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+      </div>
+      <h2>Your Cart Is Empty</h2>
+      <p class="text-muted mb-4">Browse our premium catalog and start tracking your milestones today.</p>
+      <a href="{% url 'accounts:categories' %}" class="btn checkout-btn d-inline-block w-auto px-4">
+        Browse Courses
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

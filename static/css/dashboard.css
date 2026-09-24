@@ -1,0 +1,327 @@
+/* ============================================
+   LMS TEMPLATE - DASHBOARD CSS
+   ============================================ */
+
+/* Admin / Teacher specific color overrides */
+.admin-sidebar { --primary: #7c3aed; --primary-soft: #f5f3ff; }
+.teacher-sidebar { --primary: #0ea5e9; --primary-soft: #e0f2fe; }
+
+/* ============================================
+   DASHBOARD WIDGETS
+   ============================================ */
+.widget-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  height: 100%;
+}
+.widget-title {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.widget-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--heading-color);
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+.widget-change {
+  font-size: .8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+.widget-change.up   { color: var(--success); }
+.widget-change.down { color: var(--danger); }
+
+/* Sparkline placeholder */
+.sparkline { height: 50px; }
+
+/* Revenue card */
+.revenue-card {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  border: none;
+}
+.revenue-card .widget-title { color: rgba(255,255,255,.7); }
+.revenue-card .widget-value { color: #fff; }
+.revenue-card .widget-change { color: rgba(255,255,255,.85); }
+
+/* ============================================
+   COURSE PROGRESS WIDGET
+   ============================================ */
+.course-progress-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all var(--trans-fast);
+}
+.course-progress-card:hover { border-color: var(--primary); background: var(--primary-soft); }
+.course-progress-thumb {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--gray-200);
+}
+.course-progress-info { flex: 1; min-width: 0; }
+.course-progress-name {
+  font-size: .875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: .3rem;
+}
+.course-progress-pct { font-size: .75rem; font-weight: 700; color: var(--primary); }
+
+/* ============================================
+   ACTIVITY FEED
+   ============================================ */
+.activity-feed { display: flex; flex-direction: column; }
+.activity-item {
+  display: flex;
+  gap: .875rem;
+  padding: .875rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  display: grid; place-items: center;
+  font-size: .875rem;
+  flex-shrink: 0;
+}
+.activity-text { font-size: .875rem; line-height: 1.5; }
+.activity-text strong { color: var(--heading-color); }
+.activity-time { font-size: .72rem; color: var(--text-muted); margin-top: .2rem; }
+
+/* ============================================
+   ENROLLMENT TABLE
+   ============================================ */
+.enrollment-row .course-mini {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.enrollment-row .course-mini img {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+.enrollment-row .course-mini-title {
+  font-weight: 600;
+  font-size: .875rem;
+  line-height: 1.3;
+}
+.enrollment-row .course-mini-cat { font-size: .75rem; color: var(--text-muted); }
+
+/* ============================================
+   CURRICULUM BUILDER
+   ============================================ */
+.curriculum-section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.curriculum-section-header {
+  background: var(--gray-50);
+  padding: .875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  cursor: pointer;
+  transition: background var(--trans-fast);
+}
+.curriculum-section-header:hover { background: var(--primary-soft); }
+.curriculum-drag-handle { cursor: grab; color: var(--gray-400); }
+.curriculum-lesson {
+  display: flex;
+  align-items: center;
+  gap: .875rem;
+  padding: .75rem 1.25rem;
+  border-top: 1px solid var(--border);
+  transition: background var(--trans-fast);
+}
+.curriculum-lesson:hover { background: var(--gray-50); }
+.curriculum-lesson-type {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: .75rem;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   EARNINGS / REVENUE CHARTS
+   ============================================ */
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+}
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.chart-title { font-weight: 700; font-size: 1rem; }
+.chart-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: .8rem;
+}
+.chart-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: .35rem;
+}
+
+/* ============================================
+   STUDENT PROFILE COMPLETION
+   ============================================ */
+.profile-completion {
+  background: linear-gradient(135deg, #5046e5, #0ea5e9);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.profile-completion::before {
+  content: '';
+  position: absolute;
+  right: -30px; top: -30px;
+  width: 150px; height: 150px;
+  background: rgba(255,255,255,.08);
+  border-radius: 50%;
+}
+.profile-completion-pct {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+
+/* ============================================
+   ADMIN WIDGETS
+   ============================================ */
+.admin-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .75rem;
+}
+.quick-stat {
+  text-align: center;
+  padding: .875rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+}
+.quick-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--heading-color);
+}
+.quick-stat-label { font-size: .72rem; color: var(--text-muted); }
+
+/* Donut chart label */
+.donut-center {
+  text-align: center;
+}
+
+/* ============================================
+   TICKET / SUPPORT
+   ============================================ */
+.ticket-item {
+  border-left: 3px solid transparent;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+.ticket-item:hover { background: var(--gray-50); }
+.ticket-item.priority-high   { border-left-color: var(--danger); }
+.ticket-item.priority-medium { border-left-color: var(--warning); }
+.ticket-item.priority-low    { border-left-color: var(--success); }
+.ticket-id { font-size: .72rem; color: var(--text-muted); font-weight: 600; }
+.ticket-subject { font-weight: 600; font-size: .9rem; }
+
+/* ============================================
+   ATTENDANCE GRID
+   ============================================ */
+.attendance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 4px;
+}
+.att-day {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  font-size: .7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--trans-fast);
+}
+.att-day:hover { transform: scale(1.15); }
+.att-present  { background: var(--success); color: #fff; }
+.att-absent   { background: var(--danger); color: #fff; }
+.att-late     { background: var(--warning); color: #fff; }
+.att-holiday  { background: var(--gray-200); color: var(--text-muted); }
+.att-future   { background: var(--gray-100); color: var(--gray-400); }
+
+/* ============================================
+   QR CODE UI
+   ============================================ */
+.qr-container {
+  text-align: center;
+  padding: 2rem;
+}
+.qr-box {
+  width: 200px; height: 200px;
+  margin: 0 auto 1.5rem;
+  background: var(--gray-100);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-items: center;
+  font-size: 5rem;
+}
+.qr-timer {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* ============================================
+   RESPONSIVE DASHBOARD
+   ============================================ */
+@media (max-width: 1199.98px) {
+  .admin-quick-stats { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 767.98px) {
+  :root { --sidebar-w: 260px; }
+  .admin-quick-stats { grid-template-columns: repeat(2, 1fr); }
+  .chart-legend { flex-wrap: wrap; gap: .5rem; }
+  .curriculum-section-header { flex-wrap: wrap; }
+}

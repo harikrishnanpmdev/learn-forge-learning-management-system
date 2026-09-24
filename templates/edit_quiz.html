@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .quiz-section {
+        background: #f4f6fb;
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #5046e5 0%, #7c3aed 50%, #0ea5e9 100%);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        padding: 40px;
+        color: #fff;
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .hero-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+    }
+
+    .hero-text {
+        max-width: 750px;
+        font-size: 1.02rem;
+        opacity: 0.95;
+        line-height: 1.75;
+        margin: 0;
+    }
+
+    .form-card {
+        background: #ffffff;
+        border-radius: 28px;
+        padding: 30px;
+        border: 2px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        color: #334155;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+
+    .form-control {
+        width: 100%;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 15px;
+        color: #0f172a;
+        background: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        outline: none;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-check {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .form-check-input {
+        width: 18px;
+        height: 18px;
+    }
+
+    .form-check-label {
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .error-message {
+        color: #dc2626;
+        font-size: 0.85rem;
+        margin-top: 6px;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid #edf0f5;
+    }
+
+    .btn {
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-back {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-back:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .quiz-edit-section {
+            padding: 35px 15px;
+        }
+
+        .edit-card {
+            padding: 25px;
+        }
+
+        .edit-title {
+            font-size: 1.6rem;
+        }
+
+        .button-row {
+            flex-direction: column;
+        }
+
+        .btn-back,
+        .btn-update {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<section class="quiz-section">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-content">
+                <div class="hero-eyebrow">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    LearnForge Instructor Portal
+                </div>
+                <h1 class="hero-title">Edit Quiz</h1>
+                <p class="hero-text">
+                    Update Assessment for your Students and Evaluate
+                    their Understanding of the Course Content
+                </p>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    {% if field.name == "is_active" %}
+                        <div class="form-check">
+                            {{ field }}
+                            <label class="form-check-label">Activate this Quiz</label>
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <div class="error-message">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="actions">
+                    <a href="{% url 'accounts:manage_quiz' course.id %}" class="btn btn-back">
+                        Back to Quizzes
+                    </a>
+                    <button type="submit" class="btn btn-primary">Update Quiz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

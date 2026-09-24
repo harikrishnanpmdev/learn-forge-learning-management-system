@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnForge</title>
+  <meta name="description" content="Master new skills with expert-led courses. Join 500,000+ learners on LearnForge.">
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  <style>
+    /* ─── Page-specific styles ─── */
+    .category-chip {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-full); padding: .5rem 1.1rem;
+      font-size: .85rem; font-weight: 500; cursor: pointer;
+      transition: all .2s; white-space: nowrap;
+    }
+    .category-chip:hover, .category-chip.active {
+      background: var(--primary); color: #fff; border-color: var(--primary);
+    }
+    .instructor-card { text-align: center; }
+    .instructor-card .avatar-xl { border: 3px solid var(--primary-soft); margin: 0 auto 1rem; display: block; }
+    .partner-logo { height: 32px; object-fit: contain; opacity: .5; filter: grayscale(1); transition: all .2s; }
+    .partner-logo:hover { opacity: 1; filter: none; }
+    .swiper-pagination-bullet-active { background: var(--primary) !important; }
+    .testimonial-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 1.75rem; }
+    .testimonial-text { font-size: 1rem; line-height: 1.7; color: var(--gray-700); font-style: italic; }
+    .feature-icon { width: 56px; height: 56px; border-radius: var(--radius-md); display: grid; place-items: center; font-size: 1.4rem; margin-bottom: 1rem; }
+    .section-eyebrow { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--primary); margin-bottom: .5rem; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 800; margin-bottom: 1rem; }
+    
+    .hero-banner-wrapper{
+        position: relative;
+        width: 90%;
+        height: 560px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 36px;
+        overflow: hidden;
+        background: linear-gradient(135deg,#4f46e5 0%,#7c3aed 45%,#06b6d4 100%);
+        box-shadow:
+            0 25px 60px rgba(79,70,229,.25),
+            0 10px 30px rgba(0,0,0,.08);
+        padding: 40px;
+    }
+
+    .hero-banner-bg{
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at top right, rgba(255,255,255,.22), transparent 35%),
+            radial-gradient(circle at bottom left, rgba(255,255,255,.12), transparent 30%);
+        z-index: 1;
+    }
+
+    .hero-banner-image{
+        position: relative;
+        z-index: 2;
+        width: 90%;
+        margin-bottom: -40px;
+        object-fit: contain;
+        filter:
+            drop-shadow(0 25px 35px rgba(0,0,0,.18));
+        transition: transform .4s ease;
+    }
+
+    .hero-banner-wrapper:hover .hero-banner-image{
+        transform: translateY(-8px) scale(1.02);
+    }
+
+    .search-box{
+        display:flex;
+        align-items:center;
+        gap:10px;
+    }
+
+    .search-box input{
+        border:1px solid var(--border);
+        padding:10px 15px;
+        border-radius:30px;
+        width:220px;
+        box-shadow:0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .search-box .btn{
+        background:var(--surface);
+        border:1px solid var(--border);
+        border-radius:var(--radius-xl);
+        width:42px;
+        height:42px;
+        box-shadow:0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .search-box .btn:hover, .search-box input:hover{
+      border-color:var(--primary);
+    }
+
+    .search-box input:focus{
+      border-color:var(--primary);
+      outline:none;
+    }
+    
+    .dropdown-item:hover{
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    @media(max-width:991px){
+    .hero-banner-wrapper{
+        min-height: 500px;
+        padding: 30px;
+        border-radius: 28px;
+    }
+    .hero-banner-image{
+        max-width: 420px;
+    }
+    }
+
+    @media(max-width:576px){
+    .hero-banner-wrapper{
+        min-height: 420px;
+        padding: 20px;
+        border-radius: 24px;
+    }
+    .hero-banner-image{
+        max-width: 100%;
+    }
+    }
+  </style>
+  
+</head>
+<body>
+
+{% if messages %}
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:9999;">
+  {% for message in messages %}
+    <div class="toast show border-0 shadow-lg mb-2
+      {% if message.tags == 'success' %}
+        text-bg-success
+      {% elif message.tags == 'warning' %}
+        text-bg-warning
+      {% elif message.tags == 'error' %}
+        text-bg-danger
+      {% else %}
+        text-bg-primary
+      {% endif %}">
+
+      <div class="d-flex">
+        <div class="toast-body">
+          {% if message.tags == 'success' %}
+            <i class="bi bi-check-circle-fill me-2"></i>
+          {% elif message.tags == 'warning' %}
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {% elif message.tags == 'error' %}
+            <i class="bi bi-x-circle-fill me-2"></i>
+          {% endif %}
+          {{ message }}
+        </div>
+          <button type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast">
+          </button>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ─── NAVBAR ─── -->
+{% if not hide_navbar %}
+<nav class="navbar navbar-expand-lg lms-navbar">
+  <div class="container-xl">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <span style="width:34px;height:34px;background:linear-gradient(135deg,#5046e5,#0ea5e9);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:1rem;flex-shrink:0;">
+        <i class="bi bi-mortarboard-fill"></i>
+      </span>
+      LearnForge
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav mx-auto gap-3">
+        {% if user.is_authenticated %}
+
+          {% if user.want_to_join_as == "student" %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:student_dashboard' %}">Home</a></li>
+          {% elif user.want_to_join_as == "teacher" %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:instructor_dashboard' %}">Home</a></li>
+          {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:categories' %}">Home</a></li>
+          {% endif %}
+        {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:categories' %}">Home</a></li>
+        {% endif %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Courses</a>
+          <ul class="dropdown-menu shadow-lg border-0" style="border-radius:var(--radius-md);">
+            {% for i in dropdown %}
+            <li><a class="dropdown-item" href="{% url 'accounts:courses' i.id %}">{{ i.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% if user.is_authenticated %}
+          {% if user.want_to_join_as == "teacher" %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:create_course' %}">Create Course</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:my_courses' %}">My Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a></li>
+          {% elif user.want_to_join_as == "student" %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart:my_courses' %}">My Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart:my_certificates' %}">My Certificates</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart:cartview' %}">Cart</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a></li>
+          {% endif %}
+        {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
+        {% endif %}
+      </ul>
+        <form action="{% url 'search:search' %}" class="search-box">
+            <input type="text" name="c" placeholder="Search Courses">
+            <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass text-primary"></i></button>
+        </form>
+    </div>
+  </div>
+</nav>
+{% endif %}
+
+{% block content %}
+<!-- ─── HERO ─── -->
+<section class="hero-section">
+  <div class="container-xl position-relative">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="hero-badge">
+          <i class="bi bi-mortarboard-fill"></i> No.1 Rated E-Learning Platform 2026
+        </div>
+        <h1 class="hero-title">
+          Learn Without<br><span>Limits.</span><br>Grow Beyond.
+        </h1>
+        <p class="hero-subtitle">
+          Master in-demand skills with expert-led courses. Join over 500,000 learners transforming their careers with LearnForge.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{% url 'accounts:courses' 1 %}" class="btn btn-lg" style="background:#fff;color:var(--primary);font-weight:700;">
+            <i class="bi bi-play-circle me-2"></i>Browse Courses
+          </a>
+          <a href="{% url 'accounts:register' %}" class="btn btn-lg glass text-white border border-white border-opacity-25">
+            Start for Free <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num" data-counter="500" data-suffix="K+">0</div>
+            <div class="hero-stat-label">Active Learners</div>
+          </div>
+          <div>
+            <div class="hero-stat-num" data-counter="1200" data-suffix="+">0</div>
+            <div class="hero-stat-label">Expert Courses</div>
+          </div>
+          <div>
+            <div class="hero-stat-num" data-counter="98" data-suffix="%" data-decimals="0">0</div>
+            <div class="hero-stat-label">Satisfaction Rate</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+        <div class="hero-banner-wrapper">
+          <div class="hero-banner-bg"></div>
+          <img src="{% static 'images/1.png' %}" class="hero-banner-image">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PARTNERS ─── -->
+<section class="py-4 border-bottom" style="background:var(--surface);">
+  <div class="container-xl">
+    <div class="text-center mb-3">
+      <span style="font-size:.78rem;color:var(--text-muted);font-weight:500;">Trusted by learners from leading companies</span>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 gap-md-5">
+      <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;opacity:.35;color:var(--gray-700);">Google</span>
+      <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;opacity:.35;color:var(--gray-700);">Microsoft</span>
+      <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;opacity:.35;color:var(--gray-700);">Amazon</span>
+      <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;opacity:.35;color:var(--gray-700);">Meta</span>
+      <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;opacity:.35;color:var(--gray-700);">Netflix</span>
+      <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;opacity:.35;color:var(--gray-700);">Spotify</span>
+      <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;opacity:.35;color:var(--gray-700);">Airbnb</span>
+    </div>
+  </div>
+</section>
+
+{% block categories %}
+{% endblock %}
+
+<!-- ─── CTA BANNER ─── -->
+<section class="py-5" style="background:linear-gradient(135deg,#5046e5,#7c3aed);" data-aos="fade-up">
+  <div class="container-xl text-center text-white">
+    <h2 style="font-size:clamp(1.5rem,3vw,2.5rem);font-weight:800;margin-bottom:1rem;">Ready to Transform Your Career?</h2>
+    <p style="opacity:.85;font-size:1.05rem;margin-bottom:2rem;">Join 500,000+ learners. Start your journey today with 7-day free trial — no credit card required.</p>
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+      <a href="{% url 'accounts:register' %}" class="btn btn-lg" style="background:#fff;color:var(--primary);font-weight:700;">Start Learning Free</a>
+      <a href="{% url 'accounts:courses' 1 %}" class="btn btn-lg glass text-white border border-white border-opacity-25">Browse Courses</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+<!-- ─── FOOTER ─── -->
+{% if not hide_footer %}
+<footer class="lms-footer">
+  <div class="container-xl">
+    <div class="row g-4 mb-4">
+      <div class="col-lg-4">
+        <div class="footer-brand d-flex align-items-center gap-2 mb-3">
+          <span style="width:34px;height:34px;background:linear-gradient(135deg,#5046e5,#0ea5e9);border-radius:8px;display:grid;place-items:center;flex-shrink:0;">
+            <i class="bi bi-mortarboard-fill text-white"></i>
+          </span>
+          LearnForge
+        </div>
+        <p style="color:rgba(255,255,255,.6);font-size:.875rem;line-height:1.7;">Empowering learners worldwide with world-class online education. Start your journey to mastery today.</p>
+        <div class="d-flex gap-2 mt-3">
+          <a href="#" class="icon-btn" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="icon-btn" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="icon-btn" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;"><i class="bi bi-youtube"></i></a>
+          <a href="#" class="icon-btn" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Platform</div>
+        <a href="courses.html" class="footer-link">All Courses</a>
+        <a href="instructors.html" class="footer-link">Instructors</a>
+        <a href="pricing.html" class="footer-link">Pricing</a>
+        <a href="about.html" class="footer-link">About Us</a>
+        <a href="blog.html" class="footer-link">Blog</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Support</div>
+        <a href="faq.html" class="footer-link">FAQ</a>
+        <a href="contact.html" class="footer-link">Contact Us</a>
+        <a href="#" class="footer-link">Help Center</a>
+        <a href="#" class="footer-link">Community</a>
+        <a href="#" class="footer-link">Affiliate</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Legal</div>
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="#" class="footer-link">Terms of Service</a>
+        <a href="#" class="footer-link">Cookie Policy</a>
+        <a href="#" class="footer-link">GDPR</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Download App</div>
+        <a href="#" class="footer-link d-flex align-items-center gap-2"><i class="bi bi-apple"></i> App Store</a>
+        <a href="#" class="footer-link d-flex align-items-center gap-2"><i class="bi bi-google-play"></i> Google Play</a>
+        <div class="mt-3">
+          <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-bottom:.35rem;">NEWSLETTER</div>
+          <div class="input-group input-group-sm">
+            <input type="email" class="form-control" placeholder="your@email.com" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15);color:#fff;">
+            <button class="btn btn-primary">Go</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 footer-bottom">
+      <span>© 2026 LearnForge Inc. All rights reserved.</span>
+      <div class="d-flex gap-3">
+        <a href="#" class="footer-link" style="margin:0;">Privacy</a>
+        <a href="#" class="footer-link" style="margin:0;">Terms</a>
+        <a href="#" class="footer-link" style="margin:0;">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to top -->
+<div class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="bi bi-arrow-up"></i>
+</div>
+{% endif %}
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.0/dist/apexcharts.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+  // Testimonials swiper
+  new Swiper('.testimonialSwiper', {
+    slidesPerView: 1,
+    spaceBetween: 24,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+  });
+
+  // Category filter
+  document.querySelectorAll('.category-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // Scroll top visibility
+  window.addEventListener('scroll', () => {
+    document.querySelector('.scroll-top')?.classList.toggle('show', window.scrollY > 300);
+  });
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll(".hero-stat-num");
+
+    counters.forEach(counter => {
+        const target = parseFloat(counter.dataset.counter);
+        const suffix = counter.dataset.suffix || "";
+        const decimals = parseInt(counter.dataset.decimals || 0);
+
+        let current = 0;
+        const duration = 2000;
+        const stepTime = 16;
+        const increment = target / (duration / stepTime);
+
+        const updateCounter = () => {
+        current += increment;
+
+        if (current >= target) {
+            counter.textContent = target.toFixed(decimals) + suffix;
+        } else {
+            counter.textContent =
+            current.toFixed(decimals) + suffix;
+            requestAnimationFrame(updateCounter);
+        }
+        };
+
+        updateCounter();
+    });
+    });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    const toasts = document.querySelectorAll('.toast');
+    toasts.forEach(function(toast){
+        setTimeout(function(){
+            toast.classList.remove('show');
+            setTimeout(function(){
+                toast.remove();
+            },300);
+        },3000);
+    });
+});
+</script>
+</body>
+</html>
